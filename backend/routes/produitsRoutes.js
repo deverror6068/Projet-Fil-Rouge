@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const produitsController = require('../controllers/produitsController');
+const requireLogin = require("../middlewares/requireLogin");
 
 // Routes
-router.get('/', produitsController.getProduits);
-router.post('/', produitsController.ajouterProduit);
-router.delete('/:id', produitsController.supprimerProduit);
-router.put('/:id', produitsController.mettreAJourProduit); // Pour être complet
+router.get('/', requireLogin, produitsController.getProduits);
+router.post('/',requireLogin, produitsController.ajouterProduit);
+router.delete('/:id',requireLogin, produitsController.supprimerProduit);
+router.put('/:id',requireLogin, produitsController.mettreAJourProduit); // Pour être complet
 
 module.exports = router;

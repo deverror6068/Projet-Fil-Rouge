@@ -2,15 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const utilisateurController = require('../controllers/utilisateurController.js');
+const requireLogin = require("../middlewares/requireLogin");
 
-router.get('/', utilisateurController.getAllUtilisateurs);
+router.get('/',requireLogin, utilisateurController.getAllUtilisateurs);
 
-router.post('/', utilisateurController.createUtilisateur);
+router.post('/',requireLogin, utilisateurController.createUtilisateur);
 
 // Supprimer un utilisateur
-router.delete('/:id', utilisateurController.deleteUtilisateur);
+router.delete('/:id',requireLogin, utilisateurController.deleteUtilisateur);
 
-router.put('/:id', utilisateurController.updateUtilisateur);
+router.put('/:id',requireLogin, utilisateurController.updateUtilisateur);
 
 
 // Mettre à jour un utilisateur

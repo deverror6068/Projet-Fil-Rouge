@@ -3,11 +3,17 @@ const db = require('../models/db');
 // 1. Créer une commande avec des produits
 exports.creerCommande = async (req, res) => {
     const { id_fournisseur, produits } = req.body;
+    const vendeur_id = req.session.utilisateur?.id; // Sécurité : extraire depuis session
+
+    if (!vendeur_id) {
+        return res.status(403).json({ error: 'Vendeur non identifié dans la session' });
+    }
+
     try {
-        // Créer la commande
+        // Créer la commande avec le vendeur_id
         const [result] = await db.query(
-            'INSERT INTO commandes (id_fournisseur, date_commande) VALUES (?, CURDATE())',
-            [id_fournisseur]
+            'INSERT INTO commandes (id_fournisseur, date_commande, vendeur_id) VALUES (?, CURDATE(), ?)',
+            [id_fournisseur, vendeur_id]
         );
         const id_commande = result.insertId;
 
@@ -24,6 +30,7 @@ exports.creerCommande = async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de la création de la commande', details: err });
     }
 };
+
 
 // 2. Lister toutes les commandes
 exports.listerCommandes = async (req, res) => {

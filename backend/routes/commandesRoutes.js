@@ -1,17 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const commandesController = require('../controllers/commandesController');
+const requireLogin = require("../middlewares/requireLogin");
 
 // Créer une commande avec produits
-router.post('/', commandesController.creerCommande);
+router.post('/', requireLogin, commandesController.creerCommande);
 
 // Lister toutes les commandes (avec fournisseurs et produits)
-router.get('/', commandesController.listerCommandes);
+router.get('/',requireLogin, commandesController.listerCommandes);
 
 // Supprimer une commande (et ses contenus)
-router.delete('/:id', commandesController.supprimerCommande);
+router.delete('/:id',requireLogin, commandesController.supprimerCommande);
 
 // Mettre à jour le statut d'une commande
-router.put('/:id/statut', commandesController.mettreAJourStatut);
+router.put('/:id/statut',requireLogin, commandesController.mettreAJourStatut);
 
 module.exports = router;
