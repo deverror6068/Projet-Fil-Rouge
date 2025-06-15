@@ -11,5 +11,4 @@ router.delete('/:id',requireLogin, controller.supprimerRelation);
 router.get('/fournisseur/:id_fournisseur',requireLogin, controller.listerProduitsParFournisseur);
 router.get('/produit/:id_produit',requireLogin,controller.listerFournisseursParProduit);
 
-
 module.exports = router;

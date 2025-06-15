@@ -1,0 +1,111 @@
+/* LoginPage.css */
+
+#form {
+    background-color: #f0f2f7;
+  }
+  
+  .card {
+    /* Ces règles ne sont pas valides dans CSS natif et doivent être déplacées dans des media queries externes */
+  }
+  
+  /* Style général de la carte */
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    background: #f0f2f7;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    border: none;
+    padding: 2rem;
+    margin: 5rem auto;
+  }
+  
+  /* Titre centré */
+  .login-card .card-title {
+    text-align: center;
+  }
+  
+  /* Formulaire */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  /* Inputs */
+  .form-control {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  /* Bouton moderne */
+  .modern-btn {
+    background-color: #00bfa6;
+    color: #fff;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  
+  .modern-btn:hover {
+    background-color: #1ac47c;
+    transform: scale(1.03);
+  }
+  
+  /* Logos sociaux */
+  .icon-logo {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .icon-logo:hover {
+    transform: scale(1.2) rotate(5deg);
+  }
+  
+  /* Centrage des éléments visuellement */
+  #form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modern-btn {
+    background-color: #00bfa6;
+    color: #fff;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    font-weight: bolder;
+  }
+  
+  .modern-btn:hover {
+    background-color: #1ac47c;
+    transform: scale(1.03);
+    transition: 0.5s;
+  }
+  
+  /* .icon-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+  
+  .icon-logo:hover {
+    transform: scale(1.2) rotate(5deg);
+    cursor: pointer;
+  } */
+  
+  #ynov-sso {
+    transform: scale(1.3);
+  }
+  

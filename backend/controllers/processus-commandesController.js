@@ -5,7 +5,7 @@ exports.ajouterCommande = async (req, res) => {
     const { commande, lignes } = req.body;
 
     if (!commande || !Array.isArray(lignes) || lignes.length === 0) {
-        return res.status(400).json({ message: "Requête invalide : données manquantes" });
+        return res.status(400).json({ message: "Requête invalide : données manquantes" , commande, lignes});
     }
 
     const { id_fournisseur, status } = commande;
@@ -55,7 +55,7 @@ exports.ajouterCommande = async (req, res) => {
 exports.getCommandes = async (req, res) => {
     try {
         const [commandes] = await db.query(`
-            SELECT c.id_commande, c.date_commande, c.status, c.id_fournisseur, f.nom AS fournisseur
+            SELECT c.id_commande, c.date_commande, c.status, c.id_fournisseur, c.vendeur_id, f.nom AS fournisseur
             FROM commandes c
             JOIN fournisseurs f ON c.id_fournisseur = f.id_fournisseur
             ORDER BY c.date_commande DESC
@@ -187,6 +187,79 @@ exports.listerCommandesDuVendeur = async (req, res) => {
         res.json(rows);
     } catch (error) {
         console.error("Erreur lors du listing des commandes vendeur :", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+};
+exports.mettreAJourStatut = async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+
+    try {
+        await db.query('UPDATE commandes SET status = ? WHERE id_commande = ?', [status, id]);
+        res.json({ message: 'Statut mis à jour' });
+    } catch (err) {
+        res.status(500).json({ error: 'Erreur lors de la mise à jour du statut', details: err });
+    }
+};
+//recuperer le nombre de produits dans une commande
+exports.getNombreProduitsParCommande = async (req, res) => {
+    const { id_commande } = req.params;
+
+    try {
+        const [rows] = await db.query(`
+            SELECT COUNT(*) AS nombre_produits
+            FROM contenu_commande
+            WHERE id_commande = ?
+        `, [id_commande]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "Commande non trouvée" });
+        }
+
+        res.json(rows[0]);
+    } catch (err) {
+        console.error("Erreur getNombreProduitsParCommande:", err);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+};
+
+//recuperer les date de commande
+exports.getCommandeDates = async (req, res) => {
+    try {
+        const [commandes] = await db.query(`
+            SELECT DATE(date_commande) AS date_commande, COUNT(*) AS nombre_commandes
+            FROM commandes
+            GROUP BY DATE(date_commande)
+            ORDER BY DATE(date_commande) DESC
+        `);
+
+        res.json(commandes);
+    } catch (err) {
+        console.error("Erreur lors de la récupération des dates de commande :", err);
+        res.status(500).json({ error: 'Erreur lors de la récupération des dates de commande' });
+    }
+}
+
+//recuperer les commande d'un utilisateur
+exports.getCommandesByUser = async (req, res) => {
+    const userId = req.session.user?.id;
+
+    if (!userId) {
+        return res.status(401).json({ message: "Non autorisé : utilisateur non identifié" });
+    }
+
+    try {
+        const [commandes] = await db.query(`
+            SELECT c.id_commande, c.date_commande, c.status, f.nom AS fournisseur
+            FROM commandes c
+            JOIN fournisseurs f ON c.id_fournisseur = f.id_fournisseur
+            WHERE c.vendeur_id = ?
+            ORDER BY c.date_commande DESC
+        `, [userId]);
+
+        res.json(commandes);
+    } catch (err) {
+        console.error("Erreur getCommandesByUser:", err);
         res.status(500).json({ message: "Erreur serveur" });
     }
 };
