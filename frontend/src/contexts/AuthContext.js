@@ -29,6 +29,8 @@ export const AuthProvider = ({ children }) => {
         verifierConnexion();
     }, []);
 
+
+
     return (
         <AuthContext.Provider value={{ utilisateur, setUtilisateur, enChargement }}>
             {children}

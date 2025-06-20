@@ -3,13 +3,19 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import logo from './logo.png';
+import useLogout from "../services/authService";
+
+
+
+
+
 
 
 const menuItems = [
   { icon: "bx bx-grid-alt", label: "Dashboard" , path: "/dashboard",  roles: ["utilisateur", "responsable", "admin"]},
-  { icon: "bx bx-cart-alt", label: "Fournisseurs", path: "/fournisseurs" ,  roles: ["responsable", "admin"] },
-  { icon: "bx bx-box", label: "Produit", path: "/products", roles: ["responsable", "admin"] },
-  { icon: "bx bx-list-ul", label: "Commandes" , path: "/command", roles: ["responsable", "admin"]},
+  { icon: "bx bx-cart-alt", label: "Fournisseurs", path: "/fournisseurs" ,  roles: ["utilisateur","responsable", "admin"] },
+  { icon: "bx bx-box", label: "Produit", path: "/products", roles: ["utilisateur","responsable", "admin"] },
+  { icon: "bx bx-list-ul", label: "Commandes" , path: "/command", roles: ["utilisateur","responsable", "admin"]},
   { icon: "bx bx-pie-chart-alt-2", label: "Analyses" , path: "/analyse", roles: ["responsable", "admin"] },
   // { icon: "bx bx-coin-stack", label: "Stock", path: "/stock" , roles: ["responsable", "admin"] },
   // { icon: "bx bx-book-alt", label: "Toutes les commandes",  path: "/command", roles: ["admin", "responsable"] },
@@ -21,6 +27,8 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
+  const logout = useLogout();
+
   const location = useLocation();
   const { utilisateur } = useAuth(); // Récupération de l'utilisateur connecté
   if (!utilisateur) return null; // Si l'utilisateur n'est pas connecté, ne pas afficher la sidebar
@@ -44,7 +52,7 @@ const Sidebar = () => {
           </li>
         ))}
         <li className="log_out">
-          <a href="#">
+          <a onClick={logout}>
             <i className="bx bx-log-out"></i>
             <span className="links_name">Déconnexion</span>
           </a>

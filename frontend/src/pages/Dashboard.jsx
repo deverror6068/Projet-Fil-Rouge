@@ -29,7 +29,7 @@ const DashboardPage = () => {
        
       </section>
       <div className="footer">
-          <p>© 2023 D-CLIC. Tous droits réservés.</p>
+          <p>© 2025 D-Stock. Tous droits réservés.</p>
       </div>
     </>
   );

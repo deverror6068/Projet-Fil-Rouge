@@ -609,3 +609,45 @@ nav .profile-details i {
 .form-proFornisseur{
   display: contents;
 }
+
+.error-container {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  padding: 80px 20px;
+  max-width: 600px;
+  margin: auto;
+  color: #333;
+}
+
+.error-code {
+  font-size: 96px;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 0.2em;
+}
+
+.error-message {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.error-description {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.back-home {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #1976d2;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.back-home:hover {
+  background-color: #155fa0;
+}

@@ -22,6 +22,8 @@ import UserPage from "./pages/UserPage";
 import Utilisateurs from './pages/User';
 import Magasin from "./pages/MagasinsPage";
 import Modifournisseur from "./pages/ModiFournisseur";
+import Page404 from "./pages/Error404";
+import RouteProtegee from "./components/ProtectedRoute";
 function App() {
     return (
         <Routes>
@@ -31,21 +33,78 @@ function App() {
                     <Dashboard />
                 </RouteProtegee>
             } /> */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/products" element={<ProductPage />} />
-            <Route path="/command" element={<Commande />} />
-            <Route path="/stock" element={<Stock />} />
-            <Route path="/analyse" element={<Analyse />} />
+            <Route path="/dashboard" element={
+                <RouteProtegee>
+                    <Dashboard />
+                </RouteProtegee>
+            } />
+            <Route path="/dashboard" element={
+                <RouteProtegee>
+                    <Dashboard />
+                </RouteProtegee>
+            } />
+            <Route path="/products" element={
+                <RouteProtegee>
+                    <ProductPage />
+                </RouteProtegee>
+            } />
+            <Route path="/command" element={
+                <RouteProtegee>
+                    <Commande />
+                </RouteProtegee>
+            } />
+            <Route path="/stock" element={
+                <RouteProtegee>
+                    <Stock />
+                </RouteProtegee>
+            } />
+            <Route path="/analyse" element={
+                <RouteProtegee>
+                    <Analyse />
+                </RouteProtegee>
+            } />
             {/* <Route path="/user" element={<UserProfile />} /> */}
-            <Route path="/fournisseurs" element={<Fournisseur />} />
-            <Route path="/stock-alerts" element={<StockAlerts />} />
+            <Route path="/fournisseurs" element={
+                <RouteProtegee>
+                    <Fournisseur />
+                </RouteProtegee>
+            } />
+            <Route path="/stock-alerts" element={
+                <RouteProtegee>
+                    <StockAlerts />
+                </RouteProtegee>
+            } />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/user" element ={<UserPage />} />
-            <Route path="/magasins" element={<Magasin />} />
-            <Route path="/utilisateurs" element={<Utilisateurs />} />
-  
-            <Route path="/modifier/:id" element={<Modifournisseur />} />
+            <Route path="/user" element={
+                <RouteProtegee>
+                    <UserPage />
+                </RouteProtegee>
+            } />
+            <Route path="/magasins" element={
+                <RouteProtegee>
+                    <Magasin />
+                </RouteProtegee>
+            } />
+            <Route path="/utilisateurs" element={
+                <RouteProtegee>
+                    <Utilisateurs />
+                </RouteProtegee>
+            } />
+            <Route path="/modifier/:id" element={
+                <RouteProtegee>
+                    <Modifournisseur />
+                </RouteProtegee>
+            } />
+            <Route path="/fournisseur/modifier/:id" element={
+                <RouteProtegee>
+                    <Modifournisseur />
+                </RouteProtegee>
+            } />
+                <Route path="*" element={
+                        <RouteProtegee>
+                                <Page404 />
+                        </RouteProtegee>} />
 
 
         </Routes>

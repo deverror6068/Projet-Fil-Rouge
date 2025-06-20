@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/authService";
 import { useAuth } from "../contexts/AuthContext";
-import "./LoginPage.css"; 
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +28,7 @@ const LoginPage = () => {
 
       if (res.ok) {
         const data = await res.json();
-        setUtilisateur(data.user);
+        setUtilisateur(data.utilisateur); // ✅ Mise à jour du contexte
         navigate("/dashboard");
       } else {
         setErreur("Session non active après la connexion.");
@@ -41,49 +41,56 @@ const LoginPage = () => {
   if (enChargement) return <p>Chargement...</p>;
 
   return (
-    <div className="card login-card shadow mx-auto mt-5" id="form">
-      <div className="card-body p-4">
-        <div className="text-center mb-4">
-          <h5 className="card-title fw-bold display-6">Se connecter</h5>
-          {/* <small className="text-muted">Renseignez vos informations pour continuer</small> */}
+      <div className="card login-card shadow mx-auto mt-5" id="form">
+        <div className="card-body p-4">
+          <div className="text-center mb-4">
+            <h5 className="card-title fw-bold display-6">Se connecter</h5>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-group mb-3">
+              <label htmlFor="email" className="form-label visually-hidden">Adresse mail</label>
+              <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Adresse mail"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+              />
+            </div>
+
+            <div className="form-group mb-4">
+              <label htmlFor="motDePasse" className="form-label visually-hidden">Mot de passe</label>
+              <input
+                  type="password"
+                  id="motDePasse"
+                  name="password"
+                  className="form-control"
+                  placeholder="Mot de passe"
+                  value={motDePasse}
+                  onChange={(e) => setMotDePasse(e.target.value)}
+                  autoComplete="current-password"
+                  required
+              />
+            </div>
+
+            <button type="submit" className="btn w-100 modern-btn">
+              Se connecter
+            </button>
+
+            {erreur && <p style={{ color: "red" }} className="mt-2">{erreur}</p>}
+
+            <div className="text-center mt-3">
+              <span>Pas encore de compte ? </span>
+              <a href="/register">S'inscrire</a>
+            </div>
+          </form>
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-group mb-3">
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Adresse mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="form-group mb-4">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Mot de passe"
-              value={motDePasse}
-              onChange={(e) => setMotDePasse(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn w-100 modern-btn">
-            Se connecter
-          </button>
-          {erreur && <p style={{ color: "red" }}>{erreur}</p>}
-
-          <div className="text-center mt-3">
-            <span>Pas encore de compte ? </span>
-            <a href="/register">S'inscrire</a>
-          </div>
-        </form>
-
       </div>
-    </div>
   );
 };
 
