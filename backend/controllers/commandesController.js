@@ -286,6 +286,7 @@ exports.creerCommande = async (req, res) => {
             );
         }
 
+
         res.status(201).json({ message: 'Commande créée', id_commande });
     } catch (err) {
         res.status(500).json({ error: 'Erreur lors de la création de la commande', details: err });
@@ -313,6 +314,8 @@ exports.listerCommandes = async (req, res) => {
             `, [commande.id_commande]);
             commande.produits = produits;
         }
+
+
 
         res.json(commandes);
     } catch (err) {

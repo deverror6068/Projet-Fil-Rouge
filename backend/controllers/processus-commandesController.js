@@ -24,8 +24,8 @@ exports.ajouterCommande = async (req, res) => {
         // ✅ Insertion de la commande avec vendeur_id
         const [result] = await connection.query(
             `INSERT INTO commandes (id_fournisseur, date_commande, status, vendeur_id)
-             VALUES (?, CURRENT_DATE(), ?, ?)`,
-            [id_fournisseur, status, vendeur_id]
+             VALUES (?,  CURRENT_TIMESTAMP, ?, ?)`,
+            [id_fournisseur, "enregistrée", vendeur_id]
         );
 
         const id_commande = result.insertId;

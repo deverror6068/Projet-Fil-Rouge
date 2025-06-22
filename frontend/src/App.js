@@ -22,10 +22,12 @@ import UserPage from "./pages/UserPage";
 import Utilisateurs from './pages/User';
 import Magasin from "./pages/MagasinsPage";
 import Modifournisseur from "./pages/ModiFournisseur";
-import Page404 from "./pages/Error404";
+import Page404 from "./pages/Error404.jsx";
 import RouteProtegee from "./components/ProtectedRoute";
+import {ToastContainer} from "react-toastify";
 function App() {
     return (
+
         <Routes>
           {/*  <Route path="/" element={<LoginPage />} />*/}
             {/* <Route path="/dashboard" element={
@@ -33,6 +35,8 @@ function App() {
                     <Dashboard />
                 </RouteProtegee>
             } /> */}
+
+
             <Route path="/dashboard" element={
                 <RouteProtegee>
                     <Dashboard />
@@ -51,6 +55,7 @@ function App() {
             <Route path="/command" element={
                 <RouteProtegee>
                     <Commande />
+                    <ToastContainer />
                 </RouteProtegee>
             } />
             <Route path="/stock" element={

@@ -1,197 +1,281 @@
 import React, { useState, useEffect } from "react";
 
-const Created = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [fournisseurs, setFournisseurs] = useState([]);
-  const [produitsDispo, setProduitsDispo] = useState([]);
-  const [idFournisseur, setIdFournisseur] = useState("");
-  const [produits, setProduits] = useState([
-    { id_produit: "", quantite: "", prix_unitaire: "" }
-  ]);
-  const [commande, setCommande] = useState({ id_fournisseur: "", status: "en cours" });
-  const [lignes, setLignes] = useState([{ id_produit: "", quantite: 1, prix_unitaire: 0 }]);
-  const [message, setMessage] = useState("");
-  const [nouvelleLigne, setNouvelleLigne] = useState({
-      id_produit: "",
-      quantite: 1,
-      prix_unitaire: ""
-  });
+const CreateCommande = ({ onAdd }) => {
+    const [fournisseurs, setFournisseurs] = useState([]);
+    const [produits, setProduits] = useState([]);
+    const [commande, setCommande] = useState({ id_fournisseur: "", status: "en cours" });
+    const [lignes, setLignes] = useState([{ id_produit: "", quantite: 1, prix_unitaire: 0 }]);
+    const [selectedFournisseurId, setSelectedFournisseurId] = useState("");
+    const [message, setMessage] = useState("");
 
-  const toggleForm = () => {
-    setShowForm(!showForm);
-  };
-  // Charger les fournisseurs
-  useEffect(() => {
-    fetch("/api/fournisseurs")
-      .then(res => res.json())
-      .then(data => {
-        // console.log("📦 Fournisseurs :", data);
-        Array.isArray(data) ? setFournisseurs(data) : setFournisseurs([]);
-      })
-      .catch(err => {
-        console.error("❌ Erreur fournisseurs :", err);
-        setFournisseurs([]);
-      });
-  }, []);
+    const fournisseurSelectionne = fournisseurs.find(f => f.id_fournisseur === parseInt(selectedFournisseurId));
+    const produitsFournisseur = produits.filter(p => p.id_fournisseur === parseInt(selectedFournisseurId));
 
-  // Charger les produits
-  useEffect(() => {
-    fetch("/api/produits")
-      .then(res => res.json())
-      .then(data => {
-        // console.log("📦 Produits :", data);
-        Array.isArray(data) ? setProduitsDispo(data) : setProduitsDispo([]);
-      })
-      .catch(err => {
-        console.error("❌ Erreur produits :", err);
-        setProduitsDispo([]);
-      });
-  }, []);
+    useEffect(() => {
+        fetch("/api/fournisseurs")
+            .then(res => res.json())
+            .then(data => setFournisseurs(data))
+            .catch(err => console.error("Erreur fournisseurs :", err));
 
-  const handleProduitChange = (index, field, value) => {
-    const updated = [...produits];
-    updated[index][field] = value;
+        fetch("/api/produits")
+            .then(res => res.json())
+            .then(data => setProduits(data))
+            .catch(err => console.error("Erreur produits :", err));
+    }, []);
 
-    if (field === "id_produit") {
-      const produit = produitsDispo.find(p => p.id_produit === parseInt(value));
-      updated[index].prix_unitaire = produit ? produit.prix : "";
+    const ajouterLigne = () => {
+        setLignes([...lignes, { id_produit: "", quantite: 1, prix_unitaire: 0 }]);
+    };
+
+    const supprimerLigne = (index) => {
+        setLignes(lignes.filter((_, i) => i !== index));
+    };
+
+    const handleLigneChange = (index, field, value) => {
+        const newLignes = [...lignes];
+        if (field === "quantite") {
+            newLignes[index][field] = parseInt(value) || 1;
+        } else if (field === "id_produit") {
+            const selectedId = parseInt(value);
+            newLignes[index].id_produit = selectedId;
+            const produit = produits.find(p => p.id_produit === selectedId);
+            newLignes[index].prix_unitaire = produit ? produit.prix : 0;
+        }
+        setLignes(newLignes);
+    };
+
+    const fecth2d = (commandes)=>{
+
+        fetch("http://localhost:5000/api/commandes", {
+            credentials: "include", // 👈 Essentiel pour la session
+        })
+            .then((res) => res.json())
+            .then((data) => {
+
+                if (Array.isArray(data)) {
+
+
+                    console.log("YGVFsdft Dosqdnut ds 2",data)
+                    onAdd(data);
+                } else {
+                    console.warn("❌ Données reçues non valides :", data);
+
+                }
+            })
+            .catch((err) => {
+                console.error("Erreur chargement commandes", err);
+
+            });
+        console.log("chargement er données e commande 2 e")
     }
 
-    setProduits(updated);
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  const ajouterProduit = () => {
-    // setProduits([...produits, { id_produit: "", quantite: "", prix_unitaire: "" }]);
-    setLignes([...lignes, { id_produit: "", quantite: 1, prix_unitaire: 0 }]);
+        const lignesValides = lignes.filter(l =>
+            l.id_produit &&
+            !isNaN(l.quantite) && l.quantite > 0 &&
+            !isNaN(l.prix_unitaire) && l.prix_unitaire > 0
+        );
 
-  };
+        if (lignesValides.length === 0) {
+            setMessage("❌ Veuillez ajouter au moins un produit valide.");
+            return;
+        }
 
-  const supprimerProduit = (index) => {
-    const updated = produits.filter((_, i) => i !== index);
-    setProduits(updated);
-  };
+        try {
 
- 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    // if (!idFournisseur || produits.some(p => !p.id_produit || !p.quantite)) {
-    //   alert("Veuillez remplir tous les champs");
-    //   return;
-    // }
-  
-    // const commande = {
-    //   id_fournisseur: parseInt(idFournisseur),
-    //   // produits: produits.map(p => ({
-    //   //   id_produit: parseInt(p.id_produit),
-    //   //   quantite: parseInt(p.quantite),
-    //   //   prix_unitaire: parseFloat(p.prix_unitaire),
-    //   // })),
-    // };
-  
-    console.log("👉 Données envoyées à l’API :", commande);
-  
-    try {
-      const res = await fetch("/api/commandes", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({commande, lignes}),
-      });
-    
-      const resText = await res.text(); // ✅ lire le message même en cas d’erreur
-    
-      if (!res.ok) {
-        console.error("❌ Erreur HTTP :", res.status, resText); // 👈 Garde ça
-        throw new Error(resText); // 👈 C’est cette erreur qui est capturée plus bas
-      }
-    
-      alert("Commande créée avec succès");
-      
-    } catch (err) {
-      console.error("❌ Erreur détaillée :", err); // 👈 Donne-nous ce message exact
-      alert("Échec de l'enregistrement");
-    }
-    
-  };
-  
+          const  commandeData =  JSON.stringify({
+                commande: {
+                    id_fournisseur: parseInt(selectedFournisseurId),
+                    status: "en cours"
+                },
+                lignes: lignesValides,
+            })
 
-  return (
-    <div className="product-form-container">
-      {!showForm && (
-        <button className="create-button" onClick={() => setShowForm(true)}>
-          Créer une commande
-        </button>
-      )}
 
-      {showForm && (
-        <form className="product-form" onSubmit={handleSubmit}>
-          <div>
-            <label>Fournisseur</label>
-            <select
-              value={idFournisseur}
-              onChange={e => setIdFournisseur(e.target.value)}
-            >
-              <option value="">Choisissez un fournisseur</option>
-              {fournisseurs.map(f => (
-                <option key={f.id_fournisseur} value={f.id_fournisseur}>
-                  {f.nom}
-                </option>
-              ))}
-            </select>
-            {fournisseurs.length === 0 && (
-              <p style={{ color: "red" }}>⚠️ Aucun fournisseur disponible</p>
-            )}
-          </div>
 
-          {produits.map((p, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <label>Produit {index + 1}</label>
-              <select
-                value={p.id_produit || ""}
-                onChange={e => handleProduitChange(index, "id_produit", e.target.value)}
-              >
-                <option value="">-- Choisissez un produit --</option>
-                {produitsDispo.map(prod => (
-                  <option key={prod.id_produit} value={prod.id_produit}>
-                    {prod.nom}
-                  </option>
+                // Appeler la fonction onAdd pour rafraîchir la liste dans le parent
+                if (onAdd) {
+                    onAdd(commandeData);
+                    console.log(onAdd,"sdffzeesdr")
+                }
+
+                // Réinitialiser le formulaire
+                setSelectedFournisseurId("");
+                setLignes([{ id_produit: "", quantite: 1, prix_unitaire: 0 }]);
+           /* } else {
+                setMessage("❌ Erreur : " + data.message);
+            }*/
+        } catch (err) {
+            console.error(err);
+            setMessage("❌ Erreur serveur lors de la création.");
+        }
+    };
+
+    const isAjouterDisabled = () => {
+        const produitsAjoutes = lignes.map(l => l.id_produit);
+        const produitsRestants = produitsFournisseur.filter(p => !produitsAjoutes.includes(p.id_produit));
+        return produitsRestants.length === 0;
+    };
+
+    return (
+        <div style={{
+            maxWidth: 800,
+            margin: "40px auto",
+            backgroundColor: "#fff",
+            padding: "32px",
+            borderRadius: "12px",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.1)",
+            fontFamily: "Arial, sans-serif"
+        }}>
+            <h2 style={{ fontSize: "24px", fontWeight: 600, marginBottom: "24px", color: "#333" }}>
+                📝 Créer une commande
+            </h2>
+
+            {message && <p style={{ color: message.startsWith("✅") ? "green" : "red", marginBottom: "16px" }}>{message}</p>}
+
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                <div>
+                    <label style={{ fontWeight: 500 }}>Fournisseur :</label><br />
+                    <select
+                        value={selectedFournisseurId}
+                        onChange={(e) => {
+                            const id = e.target.value;
+                            setSelectedFournisseurId(id);
+                            setCommande({ ...commande, id_fournisseur: id });
+                            setLignes([{ id_produit: "", quantite: 1, prix_unitaire: 0 }]);
+                        }}
+                        style={{
+                            marginTop: "4px",
+                            padding: "8px",
+                            borderRadius: "6px",
+                            border: "1px solid #ccc",
+                            width: "100%"
+                        }}
+                    >
+                        <option value="">-- Choisir un fournisseur --</option>
+                        {fournisseurs.map(f => (
+                            <option key={f.id_fournisseur} value={f.id_fournisseur}>
+                                {f.nom}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {selectedFournisseurId && produitsFournisseur.length === 0 && (
+                    <p style={{ color: "#b00020", fontStyle: "italic" }}>
+                        Ce fournisseur n’a aucun produit disponible.
+                    </p>
+                )}
+
+                <h4 style={{ fontSize: "18px", fontWeight: 600, marginTop: "16px" }}>Lignes de commande :</h4>
+
+                {lignes.map((ligne, index) => (
+                    <div key={index} style={{
+                        display: "flex",
+                        gap: "12px",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        background: "#f9f9f9",
+                        padding: "12px",
+                        borderRadius: "8px"
+                    }}>
+                        <select
+                            value={ligne.id_produit}
+                            onChange={(e) => handleLigneChange(index, "id_produit", e.target.value)}
+                            style={{ padding: "6px", borderRadius: "6px", border: "1px solid #ccc", flex: 2 }}
+                        >
+                            <option value="">-- Produit --</option>
+                            {produitsFournisseur
+                                .filter(p => !lignes.some((l, i) => i !== index && l.id_produit === p.id_produit))
+                                .map(p => (
+                                    <option key={p.id_produit} value={p.id_produit}>
+                                        {p.nom}
+                                    </option>
+                                ))}
+                        </select>
+
+                        <input
+                            type="number"
+                            min="1"
+                            value={ligne.quantite}
+                            onChange={(e) => handleLigneChange(index, "quantite", e.target.value)}
+                            style={{ width: "80px", padding: "6px", borderRadius: "6px", border: "1px solid #ccc" }}
+                        />
+
+                        <input
+                            type="number"
+                            readOnly
+                            value={ligne.prix_unitaire}
+                            style={{ width: "100px", padding: "6px", backgroundColor: "#eee", border: "none", borderRadius: "6px" }}
+                        />
+
+                        <span style={{ minWidth: 100, fontWeight: 500 }}>
+              Total : {(ligne.quantite * ligne.prix_unitaire).toFixed(2)} €
+            </span>
+
+                        <button
+                            type="button"
+                            onClick={() => supprimerLigne(index)}
+                            disabled={lignes.length === 1}
+                            style={{
+                                padding: "4px 10px",
+                                background: "#eee",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: lignes.length === 1 ? "not-allowed" : "pointer"
+                            }}
+                        >
+                            🗑
+                        </button>
+                    </div>
                 ))}
-              </select>
 
-              <input
-                type="number"
-                placeholder="Quantité"
-                value={p.quantite}
-                onChange={e => handleProduitChange(index, "quantite", e.target.value)}
-              />
+                <button
+                    type="button"
+                    onClick={ajouterLigne}
+                    disabled={isAjouterDisabled()}
+                    style={{
+                        backgroundColor: "#1976d2",
+                        color: "white",
+                        padding: "10px 16px",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: isAjouterDisabled() ? "not-allowed" : "pointer"
+                    }}
+                >
+                    ➕ Ajouter un produit
+                </button>
 
-              <input
-                type="text"
-                placeholder="Prix unitaire"
-                value={p.prix_unitaire}
-                readOnly
-              />
+                <hr />
 
-              {produits.length > 1 && (
-                <button type="button" onClick={() => supprimerProduit(index)}>❌</button>
-              )}
-            </div>
-          ))}
+                <div style={{ fontSize: "16px" }}>
+                    <p><strong>Nombre d’articles :</strong> {lignes.reduce((acc, l) => acc + Number(l.quantite), 0)}</p>
+                    <p><strong>Montant total :</strong> {lignes.reduce((acc, l) => acc + (l.quantite * l.prix_unitaire), 0).toFixed(2)} €</p>
+                    {fournisseurSelectionne && <p><strong>Fournisseur :</strong> {fournisseurSelectionne.nom}</p>}
+                </div>
 
-          {/* <button type="button" onClick={ajouterProduit}>+ Ajouter un produit</button> */}
-          <button type="submit">Valider la commande</button>
-          <button
-            type="button"
-            onClick={toggleForm}
-            style={{ marginLeft: "10px" }}
-          >
-            Fermer
-          </button>
-        </form>
-      )}
-    </div>
-  );
+                <button
+                    type="submit"
+
+                    disabled={lignes.length === 0 || lignes.some(l => !l.id_produit)}
+                    style={{
+                        backgroundColor: "#388e3c",
+                        color: "white",
+                        padding: "12px",
+                        fontSize: "16px",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        marginTop: "16px"
+                    }}
+                >
+                    ✅ Créer la commande
+                </button>
+            </form>
+        </div>
+    );
 };
 
-export default Created;
+export default CreateCommande;

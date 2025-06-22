@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import {toast} from "react-toastify";
 
-const Comdetails = () => {
+const Comdetails = (refresh ) => {
   const [commandes, setCommandes] = useState([]);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const { utilisateur } = useAuth();
@@ -14,17 +15,19 @@ const Comdetails = () => {
     fetch("http://localhost:5000/api/commandes", {
       credentials: "include",
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setCommandes(data);
-          data.forEach((c) => fetchNombreProduits(c.id_commande));
-        } else {
-          setCommandes([]);
-        }
-      })
-      .catch(() => setCommandes([]));
-  }, []);
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            // Tri décroissant par id_commande
+            const sortedData = data.sort((a, b) => b.id_commande - a.id_commande);
+            setCommandes(sortedData);
+            sortedData.forEach((c) => fetchNombreProduits(c.id_commande));
+          } else {
+            setCommandes([]);
+          }
+        })
+        .catch(() => setCommandes([]));
+  }, [refresh]);
 
   const fetchNombreProduits = async (id_commande) => {
     try {
@@ -67,12 +70,27 @@ const Comdetails = () => {
 
     if (res.ok) {
       setCommandes((prev) =>
-        prev.map((cmd) =>
-          cmd.id_commande === commande.id_commande ? { ...cmd, status: nouveauStatut } : cmd
-        )
+          prev.map((cmd) =>
+              cmd.id_commande === commande.id_commande ? { ...cmd, status: nouveauStatut } : cmd
+          )
       );
-    } else {
-      alert("Erreur lors du changement de statut.");
+      const message =(
+          <strong> Commande modifiée !</strong>
+      )
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }else {
+
+      toast.error(
+          <strong> Erreur lors du changement de status </strong>
+      )
     }
   };
 
@@ -83,8 +101,28 @@ const Comdetails = () => {
         method: "DELETE",
         credentials: "include",
       });
+
+
+
       if (res.ok) {
         setCommandes(commandes.filter((c) => c.id_commande !== id));
+        const message =(
+            <strong> Commande supprimée !</strong>
+        )
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        });
+      }else {
+
+        toast.error(
+            <strong> Erreur de  Commande </strong>
+        )
       }
     } catch (err) {
       console.error("Erreur suppression :", err);
@@ -106,7 +144,9 @@ const Comdetails = () => {
           credentials: "include",
         });
         const data = await refreshed.json();
-        setCommandes(data);
+        // Re-trier aussi après édition
+        const sortedData = data.sort((a, b) => b.id_commande - a.id_commande);
+        setCommandes(sortedData);
       }
     } catch (err) {
       console.error("Erreur modification :", err);
@@ -146,29 +186,29 @@ const Comdetails = () => {
   };
 
   return (
-    <div
-      className="liste"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "500px",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        padding: "1rem",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h2 style={{ marginBottom: "1rem" }}>Liste de commande</h2>
+      <div
+          className="liste"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "500px",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "1rem",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+      >
+        <h2 style={{ marginBottom: "1rem" }}>Liste de commande</h2>
 
-      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
-        <div style={{ overflowY: "auto", height: "100%" }} className="scroll-invisible">
-          <style>{`
+        <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+          <div style={{ overflowY: "auto", height: "100%" }} className="scroll-invisible">
+            <style>{`
             .scroll-invisible::-webkit-scrollbar { display: none; }
             .scroll-invisible { scrollbar-width: none; }
           `}</style>
 
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead style={{ position: "sticky", top: 0, backgroundColor: "#f8f8f8", zIndex: 1 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead style={{ position: "sticky", top: 0, backgroundColor: "#f8f8f8", zIndex: 1 }}>
               <tr>
                 <th style={{ padding: "8px" }}>ID</th>
                 <th style={{ padding: "8px" }}>Date</th>
@@ -177,141 +217,141 @@ const Comdetails = () => {
                 <th style={{ padding: "8px" }}>Statut</th>
                 <th style={{ padding: "8px" }}>Actions</th>
               </tr>
-            </thead>
-            <tbody>
-              {commandes.map((commande, index) => (
-                <tr
-                  key={commande.id_commande}
-                  onClick={() => fetchContenusParCommande(commande.id_commande)}
-                  style={{
-                    cursor: "pointer",
-                    background: selectedCommandeId === commande.id_commande ? "#f0f0f0" : "white",
-                  }}
-                >
-                  <td style={{ padding: "8px" }}>Commande #{commande.id_commande}</td>
-                  <td style={{ padding: "8px" }}>
-                    {new Date(commande.date_commande).toLocaleDateString()}
-                  </td>
-                  <td style={{ padding: "8px" }}>{commande.fournisseur}</td>
-                  <td style={{ padding: "8px" }}>
-                    {nombreProduitsParCommande[commande.id_commande] ?? "..."}
-                  </td>
-                  <td style={{ padding: "8px" }}>
-                    <select
-                      value={commande.status}
-                      onChange={(e) => updateStatut(commande, e.target.value)}
-                      disabled={commande.status === "livrée"}
-                      style={{ padding: "4px", borderRadius: "4px" }}
-                    >
-                      {getOptions(commande.status).map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td style={{ position: "relative", padding: "8px" }}>
-                    {commande.status === "enregistrée" && (
-                      <button
-                        style={{
-                          background: "none",
-                          border: "none",
-                          padding: "5px 10px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(commande.id_commande);
-                        }}
-                      >
-                        ❌ Annuler
-                      </button>
-                    )}
-                    {commande.status === "livrée" && (
-                      <button
-                        style={{
-                          background: "none",
-                          border: "none",
-                          padding: "5px 10px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(commande.id_commande);
-                        }}
-                      >
-                        🗑 Supprimer
-                      </button>
-                    )}
-                    {commande.status === "en cours" && (
-                      <span style={{ color: "gray" }}>Aucune action possible</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {commandes.length === 0 && (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center", padding: "1rem" }}>
-                    Aucune commande trouvée.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {showModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "white",
-              padding: "20px",
-              borderRadius: "8px",
-              width: "38%",
-              maxHeight: "80vh",
-              overflowY: "auto",
-            }}
-          >
-            <h3>Détails de la commande #{selectedCommandeId}</h3>
-            <table style={{ width: "100%" }}>
-              <thead>
-                <tr>
-                  <th>Produit</th>
-                  <th>Quantité</th>
-                  <th>Prix unitaire</th>
-                </tr>
               </thead>
               <tbody>
-                {contenus.map((contenu, index) => (
-                  <tr key={index}>
-                    <td>{contenu.produit}</td>
-                    <td>{contenu.quantite}</td>
-                    <td>{contenu.prix_unitaire} €</td>
+              {commandes.map((commande, index) => (
+                  <tr
+                      key={commande.id_commande}
+                      onClick={() => fetchContenusParCommande(commande.id_commande)}
+                      style={{
+                        cursor: "pointer",
+                        background: selectedCommandeId === commande.id_commande ? "#f0f0f0" : "white",
+                      }}
+                  >
+                    <td style={{ padding: "8px" }}>Commande #{commande.id_commande}</td>
+                    <td style={{ padding: "8px" }}>
+                      {new Date(commande.date_commande).toLocaleDateString()}
+                    </td>
+                    <td style={{ padding: "8px" }}>{commande.fournisseur}</td>
+                    <td style={{ padding: "8px" }}>
+                      {nombreProduitsParCommande[commande.id_commande] ?? "..."}
+                    </td>
+                    <td style={{ padding: "8px" }}>
+                      <select
+                          value={commande.status}
+                          onChange={(e) => updateStatut(commande, e.target.value)}
+                          disabled={commande.status === "livrée"}
+                          style={{ padding: "4px", borderRadius: "4px" }}
+                      >
+                        {getOptions(commande.status).map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td style={{ position: "relative", padding: "8px" }}>
+                      {commande.status === "enregistrée" && (
+                          <button
+                              style={{
+                                background: "none",
+                                border: "none",
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(commande.id_commande);
+                              }}
+                          >
+                            ❌ Annuler
+                          </button>
+                      )}
+                      {commande.status === "livrée" && (
+                          <button
+                              style={{
+                                background: "none",
+                                border: "none",
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(commande.id_commande);
+                              }}
+                          >
+                            🗑 Supprimer
+                          </button>
+                      )}
+                      {commande.status === "en cours" && (
+                          <span style={{ color: "gray" }}>Aucune action possible</span>
+                      )}
+                    </td>
                   </tr>
-                ))}
+              ))}
+              {commandes.length === 0 && (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: "center", padding: "1rem" }}>
+                      Aucune commande trouvée.
+                    </td>
+                  </tr>
+              )}
               </tbody>
             </table>
-            <div style={{ marginTop: "20px", textAlign: "right" }}>
-              <button onClick={() => setShowModal(false)}>Fermer</button>
-            </div>
           </div>
         </div>
-      )}
-    </div>
+
+        {showModal && (
+            <div
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 1000,
+                }}
+            >
+              <div
+                  style={{
+                    background: "white",
+                    padding: "20px",
+                    borderRadius: "8px",
+                    width: "38%",
+                    maxHeight: "80vh",
+                    overflowY: "auto",
+                  }}
+              >
+                <h3>Détails de la commande #{selectedCommandeId}</h3>
+                <table style={{ width: "100%" }}>
+                  <thead>
+                  <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix unitaire</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {contenus.map((contenu, index) => (
+                      <tr key={index}>
+                        <td>{contenu.produit}</td>
+                        <td>{contenu.quantite}</td>
+                        <td>{contenu.prix_unitaire} €</td>
+                      </tr>
+                  ))}
+                  </tbody>
+                </table>
+                <div style={{ marginTop: "20px", textAlign: "right" }}>
+                  <button onClick={() => setShowModal(false)}>Fermer</button>
+                </div>
+              </div>
+            </div>
+        )}
+      </div>
   );
 };
 

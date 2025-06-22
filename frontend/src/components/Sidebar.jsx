@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import logo from './logo.png';
 import useLogout from "../services/authService";
-
+import useNavigateHook from "../services/redirectService";
 
 
 
@@ -23,11 +23,12 @@ const menuItems = [
   // { icon: "bx bx-message", label: "Notification" , path: "/stock-alerts",  roles: ["responsable", "admin"]},
   // { icon: "bx bx-cox", label: "Utilisateur" , path: "/utilisateurs" ,  roles: ["admin, responsable"]},
   // { icon: "bx bx-cox", label: "Magasin",  roles: ["admin"], path: "/magasins" },
-  { icon: "bx bx-help-circle", label: "Utilisateur" , path: "/utilisateurs" ,  roles: ["utilisateur", "responsable", "admin"] },
+  { icon: "bx bx-help-circle", label: "Utilisateur" , path: "/utilisateurs" ,  roles: [ "responsable", "admin"] },
 ];
 
 const Sidebar = () => {
   const logout = useLogout();
+  const home = useNavigateHook()
 
   const location = useLocation();
   const { utilisateur } = useAuth(); // Récupération de l'utilisateur connecté
@@ -37,10 +38,10 @@ const Sidebar = () => {
       <div className="logo-details">
         <i className="bx bxl-c-plus-plus"></i>
         {/* <span className="logo_name">D-CLIC</span> */}
-        <img src={logo} alt="Logo" style={{ width: "100px", height: "auto" }} />
+        <img src={logo} onClick={home} alt="Logo" style={{ width: "100px", height: "auto" }} />
 
       </div>
-      <ul className="nav-links">
+        <ul className="nav-links">
         {menuItems
         .filter(item => item.roles.includes(utilisateur.role)) // filtrage par rôle ici
         .map((item, i) => (
