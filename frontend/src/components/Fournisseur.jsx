@@ -81,111 +81,123 @@ const FournisseurTable = () => {
   return (
     <div>
       <div
-        className="recent-sales box"
+      className="recent-sales box"
+      style={{
+        width: "100%",
+        height: "580px",
+        display: "flex",
+        flexDirection: "column",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        padding: "1rem",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+        overflow: "hidden",
+      }}
+      >
+      <div className="title" style={{ marginBottom: "1rem" }}>
+        Liste des fournisseurs
+      </div>
+
+      <div
+        className="sales-details"
         style={{
-          width: "100%",
-          height: "500px",
           display: "flex",
-          flexDirection: "column",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          padding: "1rem",
-          boxShadow: "0 2px 6px rgba(0,0,0,0.1)"
+          gap: "5rem",
+          flex: 1,
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
       >
-        <div className="title" style={{ marginBottom: "1rem" }}>Liste des fournisseurs</div>
-  
-        <div
-          className="sales-details"
-          style={{
-            display: "flex",
-            gap: "1rem",
-            flex: 1,
-            overflowY: "scroll",
-            scrollbarWidth: "none",           // Firefox
-            msOverflowStyle: "none",          // IE/Edge
-          }}
-        >
-          <style>{`
-            .sales-details::-webkit-scrollbar {
-              display: none; /* Chrome, Safari */
-            }
-          `}</style>
-  
-          <ul className="details">
-            <li className="topic">Nom</li>
-            {fournisseurs.map((f) => (
-              <li key={f.id_fournisseur}>
-                <button
-                  onClick={() => handleFournisseurClick(f.id_fournisseur)}
+        {/* <style>{`
+          .sales-details::-webkit-scrollbar { width: 0px; }
+          .sales-details { scrollbar-width: none; }
+          ul.details-fournisseur { flex: 1; min-width: 0; padding: 0; list-style: none; }
+          ul.details-fournisseur li.topic {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+            font-weight: bold;
+            padding: 0.5rem 0;
+          }
+          ul.details-fournisseur li {
+            margin: 0.25rem 0;
+            padding: 0.25rem;
+          }
+        `}</style> */}
+
+        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
+          <li className="topic">Nom</li>
+          {fournisseurs.map((f) => (
+            <li key={f.id_fournisseur}>
+              <button
+                onClick={() => handleFournisseurClick(f.id_fournisseur)}
+                style={{
+                  all: "unset",
+                  cursor: "pointer",
+                  color: "blue",
+                  textDecoration: "underline"
+                }}
+              >
+                {f.nom}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
+          <li className="topic">Téléphone</li>
+          {fournisseurs.map((f) => (
+            <li key={f.id_fournisseur}>{f.telephone}</li>
+          ))}
+        </ul>
+
+        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
+          <li className="topic">Email</li>
+          {fournisseurs.map((f) => (
+            <li key={f.id_fournisseur}>{f.email}</li>
+          ))}
+        </ul>
+
+        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
+          <li className="topic">Actions</li>
+          {fournisseurs.map((f, index) => (
+            <li key={f.id_fournisseur} style={{ position: "relative" }}>
+              <button className="menu-button" onClick={() => toggleMenu(index)}>...</button>
+              {openMenuIndex === index && (
+                <div
                   style={{
-                    all: "unset",
-                    cursor: "pointer",
-                    color: "blue",
-                    textDecoration: "underline"
+                    position: "absolute",
+                    top: "25px",
+                    right: "0",
+                    background: "white",
+                    border: "1px solid #ccc",
+                    padding: "5px",
+                    zIndex: 100,
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+                    display: "flex",
+                    flexDirection: "column",
+                    minWidth: "120px"
                   }}
                 >
-                  {f.nom}
-                </button>
-              </li>
-            ))}
-          </ul>
-  
-          <ul className="details">
-            <li className="topic">Téléphone</li>
-            {fournisseurs.map((f) => (
-              <li key={f.id_fournisseur}>
-                <a href="#">{f.telephone}</a>
-              </li>
-            ))}
-          </ul>
-  
-          <ul className="details">
-            <li className="topic">Email</li>
-            {fournisseurs.map((f) => (
-              <li key={f.id_fournisseur}>
-                <a href="#">{f.email}</a>
-              </li>
-            ))}
-          </ul>
-  
-          <ul className="details">
-            <li className="topic">Actions</li>
-            {fournisseurs.map((f, index) => (
-              <li key={f.id_fournisseur} style={{ position: "relative" }}>
-                <button className="menu-button" onClick={() => toggleMenu(index)}>...</button>
-                {openMenuIndex === index && (
-                  <div
-                    className="dropdown-menu"
-                    style={{
-                      position: "absolute",
-                      top: "25px",
-                      right: "0",
-                      background: "white",
-                      border: "1px solid #ccc",
-                      padding: "5px",
-                      zIndex: 100,
-                      boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
+                  <button
+                    style={{ background: "none", border: "none", padding: "5px 10px", cursor: "pointer", textAlign: "left" }}
+                    onClick={() => navigate(`/modifier/${f.id_fournisseur}`)}
                   >
-                    {/* <button
-                      style={dropdownButtonStyle}
-                      onClick={() => navigate(`/fournisseurs/${f.id_fournisseur}`)}
-                    >
-                      Modifier
-                    </button> */}
-                    <button style={dropdownButtonStyle} onClick={() =>  navigate(`/modifier/${f.id_fournisseur}`)}>
-                      Modifier
-                    </button>
-                    <button onClick={() => handleDelete(f.id_fournisseur)}>Supprimer</button>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+                    Modifier
+                  </button>
+                  <button
+                    style={{ background: "none", border: "none", padding: "5px 10px", cursor: "pointer", textAlign: "left" }}
+                    onClick={() => handleDelete(f.id_fournisseur)}
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
       </div>
       {/* {isEditing && selectedFournisseur && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>

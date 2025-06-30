@@ -30,6 +30,10 @@ exports.login = async (req, res) => {
         };
 
         res.json({ message: 'Connexion réussie', user: req.session.user });
+        console.log("Tentative de connexion avec :", email);
+        console.log("Utilisateur trouvé :", utilisateur);
+        console.log("Mot de passe correct ?", isMatch);
+
     } catch (err) {
         console.error("🔥 Erreur lors de la connexion :", err);
         res.status(500).json({ message: 'Erreur lors de la connexion' });

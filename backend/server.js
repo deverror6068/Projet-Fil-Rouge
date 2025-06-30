@@ -73,6 +73,11 @@
 // server.js
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
+require('dotenv').config();
+const session = require('express-session');
+
+
 const utilisateurRoutes = require('./routes/utilisateurRoutes');
 const produitsRoutes = require('./routes/produitsRoutes');
 const fournisseursRoute = require('./routes/fournisseursRoutes');
@@ -83,11 +88,9 @@ const alertRoutes = require("./routes/alertRoutes")
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
 //const commandesRoute = require('./routes/commandesRoutes');
-require('dotenv').config();
 
 const app = express();
 
-const session = require('express-session');
 
 
 const allowedOrigins = [
@@ -109,6 +112,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(session({
     secret: '3430203a8808167eaeaf7b85749e557bb5d50f206a2476fb79b6b7b3606cc863', // 🔒 Change-la en prod

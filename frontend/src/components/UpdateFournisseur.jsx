@@ -244,15 +244,15 @@ const FournisseurProduits = () => {
                     onChange={handleFournisseurChange}
                     style={{ marginRight: 10 }}
                 />
-                <button onClick={enregistrerFournisseur}>💾 Enregistrer fournisseur</button>
+                <button onClick={enregistrerFournisseur} style={{ marginTop: "20px" , marginBottom: "20px" }}>💾 Enregistrer fournisseur</button>
             </div>
 
             <hr />
-            <h3>📦 Produits proposés par le fournisseur</h3>
+            <h3 style={{ marginTop: "30px" }}>📦 Produits proposés par le fournisseur</h3>
             <table border="1" cellPadding="10" style={{ width: "100%" }}>
                 <thead>
                 <tr>
-                    <th>Id Produit</th>
+                    <th style={{ paddingLeft: "10px" }}>Id Produit</th>
                     <th>Nom</th>
                     <th>Prix (€)</th>
                     <th>Référence Fournisseur</th>
@@ -263,7 +263,7 @@ const FournisseurProduits = () => {
                 {modifProduits.length > 0 ? (
                     modifProduits.map((p, index) => (
                         <tr key={p.id_relation}>
-                            <td>{p.id_produit}</td>
+                            <td style={{ paddingLeft: "10px" }}>{p.id_produit}</td>
                             <td>{p.nom_produit}</td>
                             <td>
                                 <input

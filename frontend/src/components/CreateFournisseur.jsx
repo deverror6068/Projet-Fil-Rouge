@@ -19,14 +19,17 @@ const FournisseurForm = ({ onAdd }) => {
       email,
       telephone,
     };
+    console.log("🔽 Fournisseur à envoyer :", fournisseur);
 
     try {
-      const res = await fetch("/api/fournisseurs", {
+      const res = await fetch("http://localhost:5000/api/fournisseurs", {
         credentials: "include", 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fournisseur),
       });
+      console.log("🔽 Réponse du serveur :", res);
+      console.log("✅ Statut HTTP :", res.status);
 
       if (!res.ok) throw new Error("Erreur lors de la création");
 
@@ -54,7 +57,7 @@ const FournisseurForm = ({ onAdd }) => {
 
       {showForm && (
         <form className="product-form" onSubmit={handleSubmit}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="form-proFornisseur">
             <label>Nom</label>
             <input
               type="text"
@@ -63,8 +66,9 @@ const FournisseurForm = ({ onAdd }) => {
               required
             />
           </div>
+          
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="form-proFornisseur">
             <label>Adresse</label>
             <input
               type="text"
@@ -74,7 +78,7 @@ const FournisseurForm = ({ onAdd }) => {
             />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>  
+          <div className="form-proFornisseur">  
             <label>Email</label>
             <input
               type="email"
@@ -84,7 +88,7 @@ const FournisseurForm = ({ onAdd }) => {
             />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="form-proFornisseur">
             <label>Téléphone</label>
             <input
               type="tel"
@@ -94,14 +98,22 @@ const FournisseurForm = ({ onAdd }) => {
             />
           </div>
 
-          <button type="submit">Valider</button>
+          {/* <button type="submit">Valider</button>
           <button
             type="button"
             onClick={toggleForm}
             style={{ marginLeft: "10px" }}
           >
             Fermer
-          </button>
+          </button> */}
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+            <button type="submit" style={{ width: "80%" }} >Valider</button>
+          </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
+            <button type="button" onClick={toggleForm} style={{ width: "50%" }}>
+              Annuler
+            </button>
+          </div>
         </form>
       )}
     </div>

@@ -26,7 +26,7 @@ const SalesData = () => {
     <div className="recent-sales box">
       <div className="title">Commandes récentes</div>
       <div className="sales-details">
-        <ul className="details">
+        <ul className="details-commande">
           <li className="topic">Date</li>
           {commandesAffichees.map((cmd, i) => (
             <li key={i}>
@@ -34,7 +34,7 @@ const SalesData = () => {
             </li>
           ))}
         </ul>
-        <ul className="details">
+        <ul className="details-commande">
           <li className="topic">Fournisseur</li>
           {commandesAffichees.map((cmd, i) => (
             <li key={i}>
@@ -52,7 +52,7 @@ const SalesData = () => {
             </li>
           ))}
         </ul> */}
-        <ul className="details">
+        <ul className="details-commande">
           <li className="topic">Statut</li>
           {commandesAffichees.map((cmd, i) => (
             <li key={i}>

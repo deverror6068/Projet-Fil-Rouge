@@ -1,169 +1,115 @@
-
-// export default SalesData;
 import React, { useEffect, useState } from "react";
 import ProductEditForm from "./UpdateProduct";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
-const SalesData = () => {
+const SalesData = ({ refresh, setRefresh }) => {
   const [produits, setProduits] = useState([]);
-  const [openMenuIndex, setOpenMenuIndex] = useState(null);
-  const [refresh, setRefresh] = useState(false);
-  const [limit, setLimit] = useState(5);
-
-  const [isEditing, setIsEditing] = useState(false);
   const [selectedProduit, setSelectedProduit] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { utilisateur } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("/api/produits")
       .then((res) => res.json())
-      .then(setProduits)
+      .then((data) => {
+        const produitsArray = Array.isArray(data) ? data : data.produits;
+        setProduits(produitsArray || []);
+      })
       .catch((err) => console.error("Erreur chargement produits", err));
   }, [refresh]);
-
-  const toggleMenu = (index) => {
-    setOpenMenuIndex(openMenuIndex === index ? null : index);
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Confirmer la suppression ?")) return;
-
-    try {
-      await fetch(`/api/produits/${id}`, { method: "DELETE" });
-      setRefresh(!refresh);
-      alert("Produit supprimé");
-    } catch (err) {
-      console.error("Erreur suppression :", err);
-      alert("Erreur lors de la suppression");
-    }
-  };
 
   const handleEdit = (produit) => {
     setSelectedProduit(produit);
     setIsEditing(true);
-    setOpenMenuIndex(null);
   };
 
-  const produitsAffiches = produits.slice(0, limit);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Confirmer la suppression ?")) return;
+    try {
+      await fetch(`/api/produits/${id}`, { method: "DELETE" });
+      setRefresh((prev) => !prev);
+      alert("Produit supprimé");
+    } catch (err) {
+      console.error("Erreur suppression :", err);
+    }
+  };
 
   const menuButtonStyle = {
     background: "none",
     border: "none",
-    fontSize: "18px",
+    fontSize: "14px",
     cursor: "pointer",
-    padding: "0 5px",
-  };
-
-  const dropdownMenuStyle = {
-    position: "absolute",
-    top: "25px",
-    right: "0",
-    background: "white",
-    border: "1px solid #ccc",
-    padding: "5px",
-    zIndex: 100,
-    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-    display: "flex",
-    flexDirection: "column",
-  };
-
-  const dropdownButtonStyle = {
-    background: "none",
-    border: "none",
-    padding: "5px 10px",
-    cursor: "pointer",
-    textAlign: "left",
+    marginRight: "0.5rem",
   };
 
   return (
     <div
-      className="recent-sales box"
+      className="liste"
       style={{
-        width: "56%",
-        height: "580px",
         display: "flex",
         flexDirection: "column",
+        height: "500px",
+        width: "100%",
         border: "1px solid #ccc",
         borderRadius: "8px",
         padding: "1rem",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        overflow: "hidden",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       }}
     >
-      <div className="title" style={{ marginBottom: "1rem" }}>Liste des produits</div>
+      <h2 style={{ marginBottom: "1rem" }}>Liste des produits</h2>
 
-      <div
-        className="sales-details"
-        style={{
-          display: "flex",
-          gap: "1rem",
-          flex: 1,
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
-        <style>{`
-          .sales-details::-webkit-scrollbar { width: 0px; }
-          .sales-details { scrollbar-width: none; }
-          ul.details { flex: 1; min-width: 0; }
-          ul.details li { word-break: break-word; }
-          ul.details li.topic {
-            position: sticky;
-            top: -11px;
-            background: white;
-            z-index: 2;
-            font-weight: bold;
-            padding: 0.5rem 0;
-          }
-        `}</style>
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <div style={{ overflowY: "auto", height: "100%" }} className="scroll-invisible">
+          <style>{`
+            .scroll-invisible::-webkit-scrollbar { display: none; }
+            .scroll-invisible { scrollbar-width: none; }
+          `}</style>
 
-        <ul className="details">
-          <li className="topic">Nom</li>
-          {produits.map((produit) => (
-            <li key={produit.id_produit}><a href="#">{produit.nom}</a></li>
-          ))}
-        </ul>
-
-        <ul className="details">
-          <li className="topic">Quantité</li>
-          {produits.map((produit) => (
-            <li key={produit.id_produit}><a href="#">{produit.quantite}</a></li>
-          ))}
-        </ul>
-
-        <ul className="details">
-          <li className="topic">Prix</li>
-          {produits.map((produit) => (
-            <li key={produit.id_produit}><a href="#">{produit.prix} €</a></li>
-          ))}
-        </ul>
-
-        {utilisateur?.role === "responsable" && (
-          <ul className="details">
-            <li className="topic">Actions</li>
-            {produits.map((produit, index) => (
-              <li key={produit.id_produit} style={{ position: "relative" }}>
-                <button style={menuButtonStyle} onClick={() => toggleMenu(index)}>...</button>
-                {openMenuIndex === index && (
-                  <div style={dropdownMenuStyle}>
-                    <button style={dropdownButtonStyle} onClick={() => handleEdit(produit)}>Modifier</button>
-                    <button style={dropdownButtonStyle} onClick={() => handleDelete(produit.id_produit)}>Supprimer</button>
-                  </div>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead style={{ position: "sticky", top: 0, backgroundColor: "#f8f8f8", zIndex: 1 }}>
+              <tr>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Nom</th>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Quantité</th>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Prix</th>
+                {utilisateur?.role === "responsable" && (
+                  <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
                 )}
-              </li>
-            ))}
-          </ul>
-        )}
+              </tr>
+            </thead>
+            <tbody>
+              {produits.map((produit) => (
+                <tr key={produit.id_produit}>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{produit.nom}</td>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{produit.quantite}</td>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{produit.prix} €</td>
+                  {utilisateur?.role === "responsable" && (
+                    <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
+                      <button style={menuButtonStyle} onClick={() => handleEdit(produit)}>Modifier</button>
+                      <button style={menuButtonStyle} onClick={() => handleDelete(produit.id_produit)}>Supprimer</button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+              {produits.length === 0 && (
+                <tr>
+                  <td colSpan={utilisateur?.role === "responsable" ? 4 : 3} style={{ textAlign: "center", padding: "1rem" }}>
+                    Aucun produit trouvé.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Modal pour modification */}
       {isEditing && selectedProduit && (
         <div
           style={{
             position: "fixed",
-            top: 0, left: 0, right: 0, bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor: "rgba(0,0,0,0.5)",
             display: "flex",
             alignItems: "center",
@@ -188,7 +134,7 @@ const SalesData = () => {
                 setSelectedProduit(null);
               }}
               onUpdate={() => {
-                setRefresh(!refresh);
+                setRefresh((prev) => !prev);
                 setIsEditing(false);
                 setSelectedProduit(null);
               }}

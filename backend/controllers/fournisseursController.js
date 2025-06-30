@@ -137,6 +137,7 @@ exports.getFournisseursById = async (req, res,) => {
 // ➕ POST - Ajouter un fournisseur
 exports.ajouterFournisseur = async (req, res) => {
     const { nom, adresse, email, telephone } = req.body;
+    console.log("🔽 Fournisseur à ajouter :", req.body);
     try {
         await db.query(
             'INSERT INTO fournisseurs (nom, adresse, email, telephone) VALUES (?, ?, ?, ?)',

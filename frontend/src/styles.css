@@ -283,12 +283,18 @@ nav .profile-details i {
 .sales-boxes .sales-details li.topic {
   font-size: 20px;
   font-weight: 500;
-
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+  padding: 8px 0;
 
 }
+
 .sales-boxes .sales-details li {
   list-style: none;
-  margin: 5px 0;
+  /* margin: 5px 0;
+  height: 40px; */
 }
 .sales-boxes .sales-details li a {
   font-size: 18px;
@@ -597,7 +603,7 @@ nav .profile-details i {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .details{
-  margin-top: 6rem;
+  margin-top: 110rem;
 }
 .form-user{
   display: flex;

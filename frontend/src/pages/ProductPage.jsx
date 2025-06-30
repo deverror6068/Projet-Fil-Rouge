@@ -45,7 +45,8 @@ const ProductPage = () => {
     setRefresh(!refresh);
   };
 
-  
+  const handleRefresh = () => setRefresh(prev => !prev);
+
 
   return (
     <>
@@ -61,26 +62,39 @@ const ProductPage = () => {
               editingProduct={editingProduct}
             />
           )} */}
-          <div className="product-actions" style={{ display: "flex" , marginTop: "2rem"}}>
-            <ProductForm
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              editingProduct={editingProduct}
-            />
-            <CreateProFornisseur
-              onAdd={handleAdd} 
-              onEdit={handleEdit}
-              editingProduct={editingProduct}
-            />
-            <AssocierProductFor
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              editingProduct={editingProduct}
-            />
-          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: "2rem",
+              padding: "2rem",
+              alignItems: "flex-start", // pour aligner en haut
+              flexWrap: "wrap" // au cas où l'écran est petit
+            }}
+          >
+            <div className="product-actions" style={{ display: "flex" , marginTop: "2rem"}}>
+              {/* <ProductForm
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                editingProduct={editingProduct}
+              /> */}
+              <ProductForm onAdd={handleRefresh} />
+              <CreateProFornisseur
+                onAdd={handleAdd} 
+                onEdit={handleEdit}
+                editingProduct={editingProduct}
+              />
+              <AssocierProductFor
+                onAdd={handleAdd}
+                onEdit={handleEdit}
+                editingProduct={editingProduct}
+              />
+            </div>
 
-          <div className="sales-boxes" style={{ marginTop: "3rem" }}> 
-              <ProductTable/>
+            <div className="sales-boxes" style={{ marginTop: "3rem", flex: 1 }}> 
+                {/* <ProductTable/> */}
+                <ProductTable refresh={refresh} setRefresh={setRefresh} />
+
+            </div>
           </div>
         </div>
         
