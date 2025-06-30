@@ -298,7 +298,7 @@ const FournisseurProduits = () => {
 
                 </tbody>
             </table>
-            <h3>➕ Ajouter un produit à ce fournisseur</h3>
+            <h3 style={{marginTop : "4rem" }}>➕ Ajouter un produit à ce fournisseur</h3>
             <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
                 <select onChange={(e) => setIdProduit(e.target.value)}>
                     <option value="">-- Sélectionner un produit --</option>

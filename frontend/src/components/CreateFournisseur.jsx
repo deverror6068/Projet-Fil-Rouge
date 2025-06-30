@@ -28,8 +28,8 @@ const FournisseurForm = ({ onAdd }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fournisseur),
       });
-      console.log("🔽 Réponse du serveur :", res);
-      console.log("✅ Statut HTTP :", res.status);
+      // console.log("🔽 Réponse du serveur :", res);
+      // console.log("✅ Statut HTTP :", res.status);
 
       if (!res.ok) throw new Error("Erreur lors de la création");
 

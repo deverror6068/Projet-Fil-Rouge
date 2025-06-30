@@ -73,7 +73,7 @@ const AjouterProduitFournisseur = () => {
       if (res.ok) {
         const updated = await res.json();
         setMessage(editingId ? "✅ Produit modifié." : "✅ Produit ajouté.");
-
+        setTimeout(() => setMessage(""), 5000);
         setProduits((prev) => {
           const exists = prev.some(p => p.id_produit === updated.id_produit);
           if (exists) {

@@ -27,6 +27,7 @@ const ProductPage = () => {
       body: JSON.stringify(product),
     });
     setRefresh(!refresh);
+    // window.location.reload();
   };
 
   const handleEdit = async (product) => {
@@ -37,6 +38,7 @@ const ProductPage = () => {
     });
     setEditingProduct(null);
     setRefresh(!refresh);
+    // window.location.reload();
   };
 
   const handleDelete = async (id) => {
