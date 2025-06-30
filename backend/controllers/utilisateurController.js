@@ -157,7 +157,7 @@
 //   };
 
 
-// controllers/utilisateurController.js
+
 const db = require('../models/db');
 const bcrypt = require("bcrypt")
 exports.getAllUtilisateurs = async (req, res) => {
@@ -168,6 +168,43 @@ exports.getAllUtilisateurs = async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur', error });
     }
 };
+
+/*exports.createUtilisateur = async (req, res) => {
+    const { nom, prenom, email, mot_de_passe } = req.body;
+
+    if (!nom || !prenom || !email || !mot_de_passe) {
+        return res.status(400).json({ message: "Champs requis manquants." });
+    }
+
+    const [existing] = await db.query(
+        'SELECT id_utilisateur FROM utilisateurs WHERE email = ?',
+        [email]
+    );
+
+    if (existing.length > 0) {
+        return res.status(409).json({ message: "Email déjà utilisé." });
+    }
+
+    const role = "utilisateur";
+    const statut = "actif"; // si tu veux forcer un statut par défaut
+
+    try {
+        // Hachage du mot de passe
+        const hash = await bcrypt.hash(mot_de_passe, 10);
+
+        // Insertion SQL avec query préparée
+        const [result] = await db.query(
+            'INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role, statut) VALUES (?, ?, ?, ?, ?, ?)',
+            [nom, prenom, email, hash, role, statut]
+        );
+
+        res.status(201).json({ message: "Utilisateur créé avec succès", id: result.insertId });
+    } catch (err) {
+        console.error("Erreur création utilisateur:", err);
+        res.status(500).json({ message: "Erreur serveur." });
+    }
+};*/
+
 
 
 exports.createUtilisateur = async (req, res) => {
@@ -183,7 +220,8 @@ exports.createUtilisateur = async (req, res) => {
     }
 };
 
-// 3. Supprimer un utilisateur par son ID
+
+
 exports.deleteUtilisateur = async (req, res) => {
     const { id } = req.params;
     try {
@@ -194,7 +232,7 @@ exports.deleteUtilisateur = async (req, res) => {
     }
 };
 
-// 4. Mettre à jour un utilisateur
+
 exports.updateUtilisateur = async (req, res) => {
     const { id } = req.params;
     const { nom, prenom, email, mot_de_passe, role, statut } = req.body;
@@ -212,22 +250,21 @@ exports.updateUtilisateur = async (req, res) => {
 exports.checkStatut = async (req, res) => {
     const { id } = req.params;  // attention, tu avais id_utilisateur mais dans ta route c'est :id
 console.log(id)
-    const [countRows] = await db.query(
+/*    const [countRows] = await db.query(
         'SELECT * FROM connexions WHERE id_utilisateur = ?',
         [id]
+    );*/
+
+    const [connRows] = await db.query(
+        'SELECT date_connexion FROM connexions WHERE id_utilisateur = ? ORDER BY date_connexion DESC LIMIT 1',
+        [id]
     );
-console.log(countRows)
+console.log(connRows)
 
-    if (countRows.length <=0) {
-        // Pas de connexion
-        res.json({ statut: "noconnexion", jours: null });
-    } else {
-        const [connRows] = await db.query(
-            'SELECT date_connexion FROM connexions WHERE id_utilisateur = ? ORDER BY date_connexion DESC LIMIT 1',
-            [id]
-        );
+    if (!(connRows.length <=0)) {
 
-        const lastConnexion = new Date(connRows[0].date_connexio);
+
+        const lastConnexion = new Date(connRows[0].date_connexion);
         const now = new Date();
 
 
@@ -235,14 +272,20 @@ console.log(countRows)
         const diffInDays = Math.floor(diffEnMs / (1000 * 60 * 60 * 24));
 
         let nouveauStatut = diffInDays > 10 ? "inactif" : "actif";
+        if (id === 7 ){
+            console.log(diffInDays > 10,"fszetrytrrf",diffInDays)
+        }
 
         // Mise à jour du statut utilisateur
         await db.query(
             'UPDATE utilisateurs SET statut = ? WHERE id_utilisateur = ?',
             [nouveauStatut, id]
         );
-console.log(diffInDays,diffEnMs,connRows[0].date_connexion)
-        res.json({ statut: nouveauStatut, jours: diffInDays });
+console.log(diffInDays,diffEnMs,connRows[0].date_connexion,connRows)
+        res.json({ statut: nouveauStatut, elapsedTime: diffEnMs });
+    }else {
+        // Pas de connexion
+        res.json({ statut: "noconnexion", jours: null });
     }
 };
 
@@ -305,5 +348,22 @@ exports.getUtilisateurConnecte = async (req, res) => {
     } catch (err) {
         console.error("Erreur getUtilisateurConnecte :", err);
         res.status(500).json({ message: "Erreur serveur" });
+    }
+};
+
+exports.checkHistory = async (req, res) => {
+    try{
+        const { id } = req.params;  // attention, tu avais id_utilisateur mais dans ta route c'est :id
+        console.log(id,req.params.id)
+        const [history] = await db.query(
+            'SELECT *  FROM connexions WHERE id_utilisateur = ? ORDER BY date_connexion DESC ',
+            [id]
+        );
+
+        console.log([history][0])
+
+        res.status(200).json({ history: history });
+    }catch (err){
+        res.status(500).json({ message: "Erreur serveur.", details : err });
     }
 };

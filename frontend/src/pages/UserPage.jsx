@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import UserProfile from "../components/UserProfil";
+import UserProfile from "../components/UserProfile";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);

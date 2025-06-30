@@ -42,6 +42,7 @@ router.put('/:id',requireLogin, utilisateurController.updateUtilisateur);
 
 router.get( '/connexion/:id',requireLogin,utilisateurController.checkStatut)
 
+router.get( '/connexion-history/:id',requireLogin,utilisateurController.checkHistory)
 
 // Mettre à jour un utilisateur
 

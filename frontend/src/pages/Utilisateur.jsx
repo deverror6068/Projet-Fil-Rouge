@@ -27,11 +27,15 @@ const Utilisateurs = () => {
           try {
             const res = await fetch(`/api/utilisateurs/connexion/${u.id_utilisateur}`);
             const result = await res.json();
+            console.log(result,"rtrt")
             newStatuts[u.id_utilisateur] = {
               statut: result.statut || "inconnu",
               days: result.jours ?? "?"
             };
+
+
           } catch (error) {
+            console.log("error")
             newStatuts[u.id_utilisateur] = { statut: "erreur", days: "?" };
           }
         }
@@ -126,6 +130,7 @@ const Utilisateurs = () => {
               <td>{statuts[u.id_utilisateur]?.days}</td>
               <td>
                 <button onClick={() => enregistrer(u)}>💾</button>
+                <button onClick={() => supprimerUtilisateur(u.id_utilisateur)}>🗑</button>
                 <button onClick={() => supprimerUtilisateur(u.id_utilisateur)}>🗑</button>
               </td>
             </tr>

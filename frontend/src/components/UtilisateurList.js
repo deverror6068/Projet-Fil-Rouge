@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-
+import {FcClock, FcEmptyTrash, FcOk} from "react-icons/fc";
 const Utilisateurs = () => {
   const { utilisateur } = useAuth();
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [statuts, setStatuts] = useState({});
+  const navigate = useNavigate();
   const [newUser, setNewUser] = useState({
     nom: "",
     prenom: "",
@@ -29,16 +30,89 @@ const Utilisateurs = () => {
         const newStatuts = {};
         for (const u of data) {
           try {
+            console.log(u,"dsfhigdfuyh")
             const res = await fetch(`/api/utilisateurs/connexion/${u.id_utilisateur}`);
             const result = await res.json();
+            console.log(result,"fdgfghfg")
             newStatuts[u.id_utilisateur] = {
-              statut: result.statut || "inconnu",
+              statut: u.statut || "inconnu",
               days: result.jours ?? "?"
+
+
             };
-          } catch {
-            newStatuts[u.id_utilisateur] = { statut: "erreur", days: "?" };
+
+
+
+// 2. Calculer la date correspondante
+
+
+// 3. Afficher la date en format lisible
+
+
+// 4. Calculer le temps écoulé par rapport à maintenant
+            const now = Date.now();
+            const elapsedMilliseconds = now - now;
+
+// 5. Convertir en jours, heures, minutes, secondes
+            const seconds = Math.floor(result.elapsedTime / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            console.log(seconds,minutes,hours,days,"zreqshtryjuty",result.elapsedTime )
+
+            if (result.statut === "noconnexion") {
+              newStatuts[u.id_utilisateur] = { statut: "inactif", days: "jamais" };
+            } else if (result.statut === "inactif") {
+              newStatuts[u.id_utilisateur] = { statut: "inactif", days: ` il y a ${days} jours` || "?" };
+              let lasttime;
+
+              if (lasttime > 0) {
+                // Différence positive → dans le passé
+                if (days >= 1) {
+                  lasttime =  `il y a${days} jour${days > 1 ? 's' : ''}`;
+                } else {
+                  lasttime =  `il y a${hours} heure${hours > 1 ? 's' : ''}`;
+                }
+              }
+            } else if (result.statut === "actif") {
+              console.log(u,"wxcwxwdfwg",result)
+              const diffAbs = Math.abs(result.jours);
+
+              let lasttime;
+
+              if (lasttime > 0) {
+                // Différence positive → dans le passé
+                if (days >= 1) {
+                  lasttime =  `il y a${days} jour${days > 1 ? 's' : ''}`;
+                } else {
+                  lasttime =  `il y a${hours} heure${hours > 1 ? 's' : ''}`;
+                }
+              } else {
+                // Différence négative → dans le futur
+                if (hours >= 1) {
+                  lasttime =  `il y a ${hours} heure${hours > 1 ? 's' : ''}`;
+                } else {
+                 if(minutes<=1){
+                   lasttime =  `à l'instant`
+                 }else {
+                   lasttime =  `il y a ${minutes} minute${minutes > 1 ? 's' : ''}`;
+                 }
+                }
+              }
+
+              newStatuts[u.id_utilisateur] = { statut: "actif", days: lasttime || "?" };
+
+
+            } else {
+              newStatuts[u.id_utilisateur] = { statut: "inconnu", days: result.jours };
+            }
+
+          } catch(err) {
+            newStatuts[u.id_utilisateur] = { statut: err.message, days: "?" };
           }
         }
+
+
         setStatuts(newStatuts);
       } catch (e) {
         setError(e.message);
@@ -120,7 +194,7 @@ const Utilisateurs = () => {
       }}
     >
       <h3 style={{ marginBottom: "1rem" }}>Liste des utilisateurs</h3>
-  
+
       {/* Scroll invisible */}
       <style>
         {`
@@ -128,7 +202,7 @@ const Utilisateurs = () => {
           .scroll-invisible { scrollbar-width: none; }
         `}
       </style>
-  
+
       <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
         <div
           style={{ overflowY: "auto", height: "100%" }}
@@ -189,9 +263,12 @@ const Utilisateurs = () => {
                   <td style={{ padding: "8px" }}>{statuts[u.id_utilisateur]?.statut}</td>
                   <td style={{ padding: "8px" }}>{statuts[u.id_utilisateur]?.days}</td>
                   <td style={{ padding: "8px" }}>
-                    <button onClick={() => enregistrer(u)}>💾</button>
+                    <button onClick={() => enregistrer(u)}><FcOk /></button>
                     <button onClick={() => supprimerUtilisateur(u.id_utilisateur)}>
-                      🗑
+                      <FcEmptyTrash />
+                    </button>
+                    <button onClick={() => navigate(`/UserHistory/${u.id_utilisateur}`)}>
+                      <FcClock />
                     </button>
                   </td>
                 </tr>
@@ -212,4 +289,3 @@ const Utilisateurs = () => {
 }
 export default Utilisateurs;
 
-           
