@@ -5,37 +5,43 @@ exports.login = async (req, res) => {
     const { email, mot_de_passe } = req.body;
 
     try {
-        // 1. Récupérer l'utilisateur par email
         const [rows] = await db.query('SELECT * FROM utilisateurs WHERE email = ?', [email]);
 
-        // 2. Vérifier si l'utilisateur existe
+
         if (rows.length === 0) {
             return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
         }
 
         const utilisateur = rows[0];
-        // 4. Vérifier le mot de passe
+
         const isMatch = await bcrypt.compare(mot_de_passe, utilisateur.mot_de_passe);
         if (!isMatch) {
             return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
         }
 
-        // 5. Authentification réussie → stocker dans la session
+        // Auth ok : stocker dans la session
         req.session.user = {
             id: utilisateur.id_utilisateur,
             role: utilisateur.role,
             nom: utilisateur.nom,
-            email: utilisateur.email,
-            id_magasin: utilisateur.id_magasin || null
+            email: utilisateur.email
         };
+        const id_utilisateur= utilisateur.id_utilisateur
 
+        await db.query(
+            'INSERT INTO connexions (id_utilisateur, date_connexion) VALUES (?, NOW())',
+            [id_utilisateur]
+        );
+
+        await db.query(
+            'UPDATE utilisateurs SET statut = "actif" WHERE  id_utilisateur = ?',
+            [id_utilisateur]
+        );
         res.json({ message: 'Connexion réussie', user: req.session.user });
-        console.log("Tentative de connexion avec :", email);
-        console.log("Utilisateur trouvé :", utilisateur);
-        console.log("Mot de passe correct ?", isMatch);
+
 
     } catch (err) {
-        console.error("🔥 Erreur lors de la connexion :", err);
+        console.log(err)
         res.status(500).json({ message: 'Erreur lors de la connexion' });
     }
 };

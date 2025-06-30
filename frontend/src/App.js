@@ -25,6 +25,7 @@ import Modifournisseur from "./pages/ModiFournisseur";
 import Page404 from "./pages/Error404.jsx";
 import RouteProtegee from "./components/ProtectedRoute";
 import {ToastContainer} from "react-toastify";
+import UserHistory from "./pages/UserHistory";
 function App() {
     return (
 
@@ -104,6 +105,13 @@ function App() {
             <Route path="/fournisseur/modifier/:id" element={
                 <RouteProtegee>
                     <Modifournisseur />
+                </RouteProtegee>
+            } />
+
+
+            <Route path="/UserHistory/:id" element={
+                <RouteProtegee>
+                    <UserHistory />
                 </RouteProtegee>
             } />
                 <Route path="*" element={
