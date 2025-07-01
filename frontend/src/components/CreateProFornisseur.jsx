@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const AjouterProduitFournisseur = () => {
+const AjouterProduitFournisseur = ({onAdd}) => {
   const [fournisseurs, setFournisseurs] = useState([]);
   const [produits, setProduits] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -92,6 +92,7 @@ const AjouterProduitFournisseur = () => {
           id_fournisseur: ""
         });
         setEditingId(null);
+        if (onAdd) onAdd(updated); // si tu veux rafraîchir la liste des produits
       } else {
         if (res.status === 401) {
           navigate("/login");

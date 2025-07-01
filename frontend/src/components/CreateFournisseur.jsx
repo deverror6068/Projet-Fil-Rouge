@@ -40,7 +40,7 @@ const FournisseurForm = ({ onAdd }) => {
       setTelephone("");
       setShowForm(false);
 
-      onAdd && onAdd(); // rafraîchit si fourni
+      if (onAdd) ; // si tu veux rafraîchir la liste des fournisseurs
     } catch (err) {
       console.error("❌ Erreur:", err);
       alert("Erreur lors de l'enregistrement");
@@ -98,14 +98,6 @@ const FournisseurForm = ({ onAdd }) => {
             />
           </div>
 
-          {/* <button type="submit">Valider</button>
-          <button
-            type="button"
-            onClick={toggleForm}
-            style={{ marginLeft: "10px" }}
-          >
-            Fermer
-          </button> */}
           <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
             <button type="submit" style={{ width: "80%" }} >Valider</button>
           </div>

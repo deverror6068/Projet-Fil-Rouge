@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const TopProducts = () => {
+const LowStockProducts = () => {
   const [produits, setProduits] = useState([]);
-  const [limite, setLimite] = useState(10);
 
   useEffect(() => {
     const fetchProduits = async () => {
@@ -21,15 +20,37 @@ const TopProducts = () => {
   }, []);
 
   const produitsFaibleStock = produits.filter((p) => p.quantite <= 5);
-  const produitsAffiches = produitsFaibleStock.slice(0, limite);
 
   return (
-    <div className="top-sales box" style={{ border: "2px solid red", backgroundColor: "#ffe6e6" }}>
-      <div className="title" style={{ color: "red" }}>🚨 Produits en stock faible</div>
+    <div
+      className="top-sales box"
+      style={{
+        border: "2px solid red",
+        backgroundColor: "#ffe6e6",
+        padding: "1rem",
+        borderRadius: "8px",
+        height: "500px",
+        display: "flex",
+        flexDirection: "column",
+        width: "60%",
+      }}
+    >
+      <div className="title" style={{ color: "red", marginBottom: "1rem" }}>
+        🚨 Produits en stock faible
+      </div>
+
       {produitsFaibleStock.length > 0 ? (
-        <div style={{ overflowX: "auto" }}>
+        <div
+          style={{ overflowY: "auto", flex: 1 }}
+          className="scroll-invisible"
+        >
+          <style>{`
+            .scroll-invisible::-webkit-scrollbar { display: none; }
+            .scroll-invisible { scrollbar-width: none; }
+          `}</style>
+
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
+            <thead style={{ position: "sticky", top: 0, backgroundColor: "#ffe6e6", zIndex: 1 }}>
               <tr style={{ borderBottom: "1px solid red" }}>
                 <th>ID</th>
                 <th>Nom</th>
@@ -39,30 +60,27 @@ const TopProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {produitsAffiches.map((produit) => (
+              {produitsFaibleStock.map((produit) => (
                 <tr key={produit.id_produit}>
                   <td>{produit.id_produit}</td>
                   <td>{produit.nom}</td>
-                  <td style={{ color: "red", fontWeight: "bold" }}>{produit.quantite}</td>
+                  <td style={{ color: "red", fontWeight: "bold" }}>
+                    {produit.quantite}
+                  </td>
                   <td>{produit.prix ? `${produit.prix} €` : "-"}</td>
                   <td>{produit.id_vendeur ?? "-"}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {limite < produitsFaibleStock.length && (
-            <div className="button" style={{ marginTop: "10px", textAlign: "center" }}>
-              <a href="#" onClick={() => setLimite(produitsFaibleStock.length)}>
-                Voir tout
-              </a>
-            </div>
-          )}
         </div>
       ) : (
-        <p style={{ textAlign: "center", padding: "10px" }}>Aucun produit en stock faible</p>
+        <p style={{ textAlign: "center", padding: "10px" }}>
+          Aucun produit en stock faible
+        </p>
       )}
     </div>
   );
 };
 
-export default TopProducts;
+export default LowStockProducts;

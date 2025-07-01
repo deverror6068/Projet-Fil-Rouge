@@ -19,18 +19,19 @@ const DashboardPage = () => {
               <StockProduct />
             </div>
 
-            <div className=" sales-boxes sales-bottom">
+            <div className=" sales-boxes sales-bottom" style={{ marginTop: "3rem", marginBottom: "3rem", padding: "2rem" }}>
               <SalesData />
               <TopProducts />
             </div>
           </div>
 
         </div>
-       
-      </section>
-      <div className="footer">
+      
+        <div className="footer">
           <p>© 2025 D-Stock. Tous droits réservés.</p>
-      </div>
+        </div>
+      </section>
+      
     </>
   );
 };

@@ -87,11 +87,7 @@ const ProductForm = ({ onAdd }) => {
             <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} required />
           </div>
 
-          {/* <button type="submit">Valider</button> */}
-          {/* un button ferme ou quitte */}
-          {/* <button type="button" onClick={handleToggleForm} style={{ marginLeft: "10px" }}>
-            Fermer
-          </button> */}
+          
           <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem" }}>
             <button type="submit" style={{ width: "80%" }} >Valider</button>
           </div>

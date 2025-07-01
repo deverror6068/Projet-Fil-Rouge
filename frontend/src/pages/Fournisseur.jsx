@@ -12,39 +12,18 @@ const Fournipage = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const { utilisateur } = useAuth();
-  // Charger les produits depuis l'API
-  // useEffect(() => {
-  //   fetch("/api/fournisseurs")
-  //     .then((res) => res.json())
-  //     .then(setProducts)
-  //     .catch((err) => console.error("Erreur chargement produits", err));
-  // }, [refresh]);
+  const [fournisseurs, setFournisseurs] = useState([]);
+  const handleRefresh = () => setRefresh(prev => !prev);
 
-  // const handleAdd = async (product) => {
-  //   await fetch("/api/fournisseurs", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(product),
-  //   });
-  //   setRefresh(!refresh);
-  // };
 
-  // const handleEdit = async (product) => {
-  //   await fetch(`/api/fournisseurs/${product.id}`, {
-  //     method: "PUT",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(product),
-  //   });
-  //   setEditingProduct(null);
-  //   setRefresh(!refresh);
-  // };
+  useEffect(() => {
+    fetch("/api/fournisseurs")
+      .then((res) => res.json())
+      .then(setFournisseurs)
+      .catch((err) => console.error("Erreur chargement fournisseurs", err));
+  }, [refresh]);
 
-  // const handleDelete = async (id) => {
-  //   if (!window.confirm("Supprimer ce produit ?")) return;
-  //   await fetch(`/api/fournisseurs/${id}`, { method: "DELETE" });
-  //   setRefresh(!refresh);
-  // };
-
+  
   return (
     <>
       <Sidebar />
@@ -52,23 +31,17 @@ const Fournipage = () => {
         <Navbar />
         <div className="home-content" style={{position: "fixed"}}>
           <h2>Gestion des Fournisseurs</h2>
-          {/* <ProductForm
-            onAdd={handleAdd}
-            onEdit={handleEdit}
-            editingProduct={editingProduct}
-          /> */}
-          {/* <ProductTable
-            products={products}
-            onDelete={handleDelete}
-            onEditClick={setEditingProduct}
-          /> */}
-          {/* {utilisateur?.role !== "responsable" && (
-            <CreateFournisseur onAdd={handleAdd} onEdit={handleEdit} editingProduct={editingProduct} />
-          )} */}
-          <div className="product-actions" style={{ display: "flex", gap: "9rem" }}>
-            <CreateFournisseur/>
+          <div className="product-actions" style={{ display: "flex", gap: "4rem" }}>
+            <CreateFournisseur onAdd={handleRefresh} />
+
+
             <div className="sales-boxes" style={{ width: "90%" }}> 
-              <Fournisseur/>
+            {/* <Fournisseur refresh={refresh} setRefresh={setRefresh}/> */}
+              <Fournisseur
+                fournisseurs={fournisseurs}
+                refresh={refresh}
+                onRefresh={handleRefresh}
+              />
             </div>
           </div>
         </div>

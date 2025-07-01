@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
-import UpdateFournisseur from "./UpdateFournisseur"; // le composant pour modifier un fournisseur
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import UpdateFournisseur from "./UpdateFournisseur";
 
 const FournisseurTable = () => {
   const [fournisseurs, setFournisseurs] = useState([]);
-  const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [refresh, setRefresh] = useState(false);
-  const [limit, setLimit] = useState(5);
-
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFournisseur, setSelectedFournisseur] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,11 +14,11 @@ const FournisseurTable = () => {
   useEffect(() => {
     fetch("/api/fournisseurs")
       .then((res) => res.json())
-      .then(data => {
+      .then((data) => {
         if (Array.isArray(data)) {
           setFournisseurs(data);
         } else {
-          console.error("❌ Données invalides reçues :", data);
+          console.error("❌ Données invalides :", data);
           setFournisseurs([]);
         }
       })
@@ -32,8 +28,9 @@ const FournisseurTable = () => {
       });
   }, [refresh]);
 
-  const toggleMenu = (index) => {
-    setOpenMenuIndex(openMenuIndex === index ? null : index);
+  const handleEdit = (fournisseur) => {
+    setSelectedFournisseur(fournisseur);
+    setIsEditing(true);
   };
 
   const handleDelete = async (id) => {
@@ -41,7 +38,7 @@ const FournisseurTable = () => {
 
     try {
       await fetch(`/api/fournisseurs/${id}`, { method: "DELETE" });
-      setRefresh(!refresh);
+      setRefresh((prev) => !prev);
       alert("Fournisseur supprimé");
     } catch (err) {
       console.error("Erreur suppression :", err);
@@ -49,18 +46,10 @@ const FournisseurTable = () => {
     }
   };
 
-  const handleEdit = (fournisseur) => {
-    setSelectedFournisseur(fournisseur);
-    setIsEditing(true);
-    setOpenMenuIndex(null);
-  };
-
   const handleFournisseurClick = async (id) => {
     try {
       const res = await fetch(`/api/fournisseurs/fournisseur/${id}`);
       const data = await res.json();
-      console.log("Produits récupérés pour le fournisseur", id, ":", data);
-
       setProduitsFournisseur(data);
       setShowModal(true);
     } catch (err) {
@@ -69,152 +58,117 @@ const FournisseurTable = () => {
     }
   };
 
-  const fournisseursAffiches = fournisseurs.slice(0, limit);
-
-  const dropdownButtonStyle = {
+  const menuButtonStyle = {
+    marginRight: "10px",
     padding: "5px 10px",
-    backgroundColor: "#eee",
+    cursor: "pointer",
     border: "1px solid #ccc",
-    cursor: "pointer"
+    borderRadius: "5px",
+    background: "#f0f0f0",
   };
-  
+
   return (
-    <div>
-      <div
-      className="recent-sales box"
+    <div
+      className="liste"
       style={{
-        width: "100%",
-        height: "580px",
         display: "flex",
         flexDirection: "column",
+        height: "500px",
+        width: "100%",
         border: "1px solid #ccc",
         borderRadius: "8px",
         padding: "1rem",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-        overflow: "hidden",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
       }}
-      >
-      <div className="title" style={{ marginBottom: "1rem" }}>
-        Liste des fournisseurs
-      </div>
+    >
+      <h2 style={{ marginBottom: "1rem" }}>Liste des fournisseurs</h2>
 
-      <div
-        className="sales-details"
-        style={{
-          display: "flex",
-          gap: "5rem",
-          flex: 1,
-          overflowY: "auto",
-          overflowX: "hidden",
-        }}
-      >
-        {/* <style>{`
-          .sales-details::-webkit-scrollbar { width: 0px; }
-          .sales-details { scrollbar-width: none; }
-          ul.details-fournisseur { flex: 1; min-width: 0; padding: 0; list-style: none; }
-          ul.details-fournisseur li.topic {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 2;
-            font-weight: bold;
-            padding: 0.5rem 0;
-          }
-          ul.details-fournisseur li {
-            margin: 0.25rem 0;
-            padding: 0.25rem;
-          }
-        `}</style> */}
+      <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
+        <div style={{ overflowY: "auto", height: "100%" }} className="scroll-invisible">
+          <style>{`
+            .scroll-invisible::-webkit-scrollbar { display: none; }
+            .scroll-invisible { scrollbar-width: none; }
+          `}</style>
 
-        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
-          <li className="topic">Nom</li>
-          {fournisseurs.map((f) => (
-            <li key={f.id_fournisseur}>
-              <button
-                onClick={() => handleFournisseurClick(f.id_fournisseur)}
-                style={{
-                  all: "unset",
-                  cursor: "pointer",
-                  color: "blue",
-                  textDecoration: "underline"
-                }}
-              >
-                {f.nom}
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
-          <li className="topic">Téléphone</li>
-          {fournisseurs.map((f) => (
-            <li key={f.id_fournisseur}>{f.telephone}</li>
-          ))}
-        </ul>
-
-        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
-          <li className="topic">Email</li>
-          {fournisseurs.map((f) => (
-            <li key={f.id_fournisseur}>{f.email}</li>
-          ))}
-        </ul>
-
-        <ul className="details-fournisseur" style={{ marginTop: "0rem" }}>
-          <li className="topic">Actions</li>
-          {fournisseurs.map((f, index) => (
-            <li key={f.id_fournisseur} style={{ position: "relative" }}>
-              <button className="menu-button" onClick={() => toggleMenu(index)}>...</button>
-              {openMenuIndex === index && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "25px",
-                    right: "0",
-                    background: "white",
-                    border: "1px solid #ccc",
-                    padding: "5px",
-                    zIndex: 100,
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-                    display: "flex",
-                    flexDirection: "column",
-                    minWidth: "120px"
-                  }}
-                >
-                  <button
-                    style={{ background: "none", border: "none", padding: "5px 10px", cursor: "pointer", textAlign: "left" }}
-                    onClick={() => navigate(`/modifier/${f.id_fournisseur}`)}
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead style={{ position: "sticky", top: 0, backgroundColor: "#f8f8f8", zIndex: 1 }}>
+              <tr>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Nom</th>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Téléphone</th>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Email</th>
+                <th style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fournisseurs.map((fournisseur) => (
+                <tr key={fournisseur.id_fournisseur}>
+                  <td
+                    style={{ padding: "10px", borderBottom: "1px solid #ddd", cursor: "pointer", color: "blue" }}
+                    onClick={() => handleFournisseurClick(fournisseur.id_fournisseur)}
                   >
-                    Modifier
-                  </button>
-                  <button
-                    style={{ background: "none", border: "none", padding: "5px 10px", cursor: "pointer", textAlign: "left" }}
-                    onClick={() => handleDelete(f.id_fournisseur)}
-                  >
-                    Supprimer
-                  </button>
-                </div>
+                    {fournisseur.nom}
+                  </td>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{fournisseur.telephone}</td>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{fournisseur.email}</td>
+                  <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
+                    <button style={menuButtonStyle} onClick={() => handleEdit(fournisseur)}>Modifier</button>
+                    <button style={menuButtonStyle} onClick={() => handleDelete(fournisseur.id_fournisseur)}>Supprimer</button>
+                  </td>
+                </tr>
+              ))}
+              {fournisseurs.length === 0 && (
+                <tr>
+                  <td colSpan={4} style={{ textAlign: "center", padding: "1rem" }}>
+                    Aucun fournisseur trouvé.
+                  </td>
+                </tr>
               )}
-            </li>
-          ))}
-        </ul>
+            </tbody>
+          </table>
+        </div>
       </div>
-      </div>
-      {/* {isEditing && selectedFournisseur && (
-        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
-          <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "10px", width: "80%", maxHeight: "90vh", overflowY: "auto" }}>
+
+      {isEditing && selectedFournisseur && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "20px",
+              borderRadius: "10px",
+              width: "400px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+            }}
+          >
             <UpdateFournisseur
               fournisseur={selectedFournisseur}
               onClose={() => {
                 setIsEditing(false);
                 setSelectedFournisseur(null);
-                setRefresh(!refresh);
+              }}
+              onUpdate={() => {
+                setRefresh((prev) => !prev);
+                setIsEditing(false);
+                setSelectedFournisseur(null);
               }}
             />
           </div>
         </div>
-      )} */}
-  
-      {/* Modal */}
+      )}
+
       {showModal && (
         <div style={{
           position: "fixed",
@@ -262,5 +216,6 @@ const FournisseurTable = () => {
       )}
     </div>
   );
-}
-export default FournisseurTable;  
+};
+
+export default FournisseurTable;

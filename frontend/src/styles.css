@@ -81,6 +81,7 @@
   width: calc(100% - 240px);
   left: 240px;
   transition: all 0.5s ease;
+  overflow-x: hidden;
 }
 .sidebar.active ~ .home-section {
   width: calc(100% - 60px);
@@ -177,6 +178,12 @@ nav .profile-details i {
 .home-section .home-content {
   position: relative;
   padding-top: 104px;
+}
+.home-content {
+  padding: 2rem;
+  overflow-y: auto;
+  height: calc(100vh - 70px); /* Si la navbar fait ~70px de hauteur */
+  box-sizing: border-box;
 }
 .home-content .overview-boxes {
   display: flex;

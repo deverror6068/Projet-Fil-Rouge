@@ -17,12 +17,7 @@ const menuItems = [
   { icon: "bx bx-box", label: "Produit", path: "/products", roles: ["utilisateur","responsable", "admin"] },
   { icon: "bx bx-list-ul", label: "Commandes" , path: "/command", roles: ["utilisateur","responsable", "admin"]},
   { icon: "bx bx-pie-chart-alt-2", label: "Analyses" , path: "/analyse", roles: ["responsable", "admin"] },
-  // { icon: "bx bx-coin-stack", label: "Stock", path: "/stock" , roles: ["responsable", "admin"] },
-  // { icon: "bx bx-book-alt", label: "Toutes les commandes",  path: "/command", roles: ["admin", "responsable"] },
-  //{ icon: "bx bx-user", label: "Profil" , path: "/user",  roles: ["utilisateur", "responsable", "admin"]},
-  // { icon: "bx bx-message", label: "Notification" , path: "/stock-alerts",  roles: ["responsable", "admin"]},
-  // { icon: "bx bx-cox", label: "Utilisateur" , path: "/utilisateurs" ,  roles: ["admin, responsable"]},
-  // { icon: "bx bx-cox", label: "Magasin",  roles: ["admin"], path: "/magasins" },
+
   { icon: "bx bx-help-circle", label: "Utilisateur" , path: "/utilisateurs" ,  roles: [ "responsable", "admin"] },
 ];
 

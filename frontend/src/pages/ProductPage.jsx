@@ -27,7 +27,6 @@ const ProductPage = () => {
       body: JSON.stringify(product),
     });
     setRefresh(!refresh);
-    // window.location.reload();
   };
 
   const handleEdit = async (product) => {
@@ -38,7 +37,6 @@ const ProductPage = () => {
     });
     setEditingProduct(null);
     setRefresh(!refresh);
-    // window.location.reload();
   };
 
   const handleDelete = async (id) => {
@@ -57,13 +55,7 @@ const ProductPage = () => {
         <Navbar />
         <div className="home-content">
           <h2 style={{marginLeft: "2rem"}}>Gestion des Produits</h2>
-          {/* {utilisateur?.role !== "responsable" && (
-            <ProductForm
-              onAdd={handleAdd}
-              onEdit={handleEdit}
-              editingProduct={editingProduct}
-            />
-          )} */}
+       
           <div
             style={{
               display: "flex",
@@ -74,13 +66,19 @@ const ProductPage = () => {
             }}
           >
             <div className="product-actions" style={{ display: "flex" , marginTop: "2rem"}}>
-              {/* <ProductForm
-                onAdd={handleAdd}
-                onEdit={handleEdit}
-                editingProduct={editingProduct}
-              /> */}
+            
               <ProductForm onAdd={handleRefresh} />
               <CreateProFornisseur
+                onAdd={handleRefresh}
+                editingProduct={editingProduct}
+              />
+
+              <AssocierProductFor
+                onAdd={handleRefresh}
+                editingProduct={editingProduct}
+              />
+
+              {/* <CreateProFornisseur
                 onAdd={handleAdd} 
                 onEdit={handleEdit}
                 editingProduct={editingProduct}
@@ -89,7 +87,7 @@ const ProductPage = () => {
                 onAdd={handleAdd}
                 onEdit={handleEdit}
                 editingProduct={editingProduct}
-              />
+              /> */}
             </div>
 
             <div className="sales-boxes" style={{ marginTop: "3rem", flex: 1 }}> 
