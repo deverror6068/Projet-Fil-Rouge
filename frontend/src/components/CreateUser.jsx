@@ -65,7 +65,7 @@ const CreateUser = ({ onAdd }) => {
           mot_de_passe: "",
           confirmPassword: "",
         });
-        if (onAdd) onAdd(data);
+        if (onAdd) onAdd();
       } else if (res.status === 401) {
         navigate("/login");
       } else {

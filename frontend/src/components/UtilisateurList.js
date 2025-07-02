@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import {Navigate, useNavigate} from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {FcClock, FcEmptyTrash, FcOk} from "react-icons/fc";
-const Utilisateurs = () => {
+import UserHistory from "../pages/UserHistory";
+
+const Utilisateurs = ({refresh}) => {
   const { utilisateur } = useAuth();
   const [utilisateurs, setUtilisateurs] = useState([]);
   const [statuts, setStatuts] = useState({});
@@ -18,6 +20,9 @@ const Utilisateurs = () => {
   });
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
 
   useEffect(() => {
     const fetchUtilisateurs = async () => {
@@ -119,7 +124,7 @@ const Utilisateurs = () => {
       }
     };
     fetchUtilisateurs();
-  }, []);
+  }, [refresh]);
 
   const handleChange = (index, field, value) => {
     const updated = [...utilisateurs];
@@ -267,9 +272,16 @@ const Utilisateurs = () => {
                     <button onClick={() => supprimerUtilisateur(u.id_utilisateur)}>
                       <FcEmptyTrash />
                     </button>
-                    <button onClick={() => navigate(`/UserHistory/${u.id_utilisateur}`)}>
+                    {/* <button onClick={() => navigate(`/UserHistory/${u.id_utilisateur}`)}>
                       <FcClock />
-                    </button>
+                    </button> */}
+                    <button onClick={() => {
+                        setSelectedUserId(u.id_utilisateur);
+                        setModalOpen(true);
+                      }}>
+                        <FcClock />
+                      </button>
+
                   </td>
                 </tr>
               ))}
@@ -284,8 +296,21 @@ const Utilisateurs = () => {
           </table>
         </div>
       </div>
+      {modalOpen && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          backgroundColor: "rgba(0,0,0,0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 999
+        }}>
+          <div style={{ backgroundColor: "white", padding: 20, borderRadius: 10, maxHeight: "80vh", overflowY: "auto" }}>
+            <UserHistory id={selectedUserId} onClose={() => setModalOpen(false)} />
+          </div>
+        </div>
+      )}
     </div>
+    
   );
+  
+
 }
 export default Utilisateurs;
 

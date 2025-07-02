@@ -10,6 +10,9 @@ import CreateUser from "../components/CreateUser";
 const User = () => {
   const { utilisateur } = useAuth();
   const [error, setError] = useState(null);
+  const [refresh, setRefresh] = useState(false); // <-- Ajout
+  const handleRefresh = () => setRefresh((prev) => !prev);
+
 
   useEffect(() => {
     // Vérifier si l'utilisateur est connecté
@@ -29,8 +32,10 @@ const User = () => {
         <Navbar />
         <div className="home-content" style={{ display: "flex" }}>
             <div className="create-user">
-                <CreateUser/>
-                <UtilisateurList />
+                {/* <CreateUser/>
+                <UtilisateurList /> */}
+                <CreateUser onAdd={handleRefresh} />
+                <UtilisateurList refresh={refresh} />
             </div>
         </div>
       </section>

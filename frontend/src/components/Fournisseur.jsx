@@ -10,6 +10,8 @@ const FournisseurTable = () => {
   const [showModal, setShowModal] = useState(false);
   const [produitsFournisseur, setProduitsFournisseur] = useState([]);
   const navigate = useNavigate();
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
+
 
   useEffect(() => {
     fetch("/api/fournisseurs")
@@ -28,9 +30,14 @@ const FournisseurTable = () => {
       });
   }, [refresh]);
 
+  const toggleMenu = (index) => {
+    setOpenMenuIndex(openMenuIndex === index ? null : index);
+  };
+
   const handleEdit = (fournisseur) => {
     setSelectedFournisseur(fournisseur);
     setIsEditing(true);
+    setOpenMenuIndex(null);
   };
 
   const handleDelete = async (id) => {
@@ -111,7 +118,7 @@ const FournisseurTable = () => {
                   <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{fournisseur.telephone}</td>
                   <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>{fournisseur.email}</td>
                   <td style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-                    <button style={menuButtonStyle} onClick={() => handleEdit(fournisseur)}>Modifier</button>
+                    <button style={menuButtonStyle} onClick={() => navigate(`/modifier/${fournisseur.id_fournisseur}`)}>Modifier</button>
                     <button style={menuButtonStyle} onClick={() => handleDelete(fournisseur.id_fournisseur)}>Supprimer</button>
                   </td>
                 </tr>
