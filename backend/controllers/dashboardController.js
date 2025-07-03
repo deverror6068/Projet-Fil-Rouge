@@ -15,9 +15,9 @@ exports.getStats = async (req, res) => {
     ]);
 
     res.json({ commandes, produits, fournisseurs,utilisateurs });
-    console.log("affichement des stats", { commandes, produits, fournisseurs,utilisateurs });
+
   } catch (err) {
-    console.error("Erreur dans getStats:", err);
+
     res.status(500).json({ error: "Erreur lors de la récupération des statistiques" });
   }
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {toast} from "react-toastify";
 
 const ProductEditForm = ({ produit, onUpdate, onClose }) => {
   const [nom, setNom] = useState("");
@@ -35,7 +36,20 @@ const ProductEditForm = ({ produit, onUpdate, onClose }) => {
 
       if (!res.ok) throw new Error("Erreur lors de la mise à jour");
 
-      alert("Produit modifié avec succès");
+      const message =(
+          <strong> produit modifié !</strong>
+      )
+
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+
       onUpdate && onUpdate(); // Pour rafraîchir la liste côté parent
       onClose && onClose();   // Pour fermer le formulaire
     } catch (err) {

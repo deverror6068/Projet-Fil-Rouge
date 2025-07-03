@@ -25,7 +25,7 @@ const StatsCards = () => {
         const res = await axios.get("http://localhost:5000/api/dashboard/stats", {
           withCredentials: true,
         });
-        console.log(res,"ertry")
+
         setStats(res.data);
 
 

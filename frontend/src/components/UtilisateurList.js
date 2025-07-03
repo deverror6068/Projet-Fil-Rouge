@@ -3,6 +3,7 @@ import {Navigate, useNavigate} from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {FcClock, FcEmptyTrash, FcOk} from "react-icons/fc";
 import UserHistory from "../pages/UserHistory";
+import {toast} from "react-toastify";
 
 const Utilisateurs = ({refresh}) => {
   const { utilisateur } = useAuth();
@@ -35,10 +36,10 @@ const Utilisateurs = ({refresh}) => {
         const newStatuts = {};
         for (const u of data) {
           try {
-            console.log(u,"dsfhigdfuyh")
+
             const res = await fetch(`/api/utilisateurs/connexion/${u.id_utilisateur}`);
             const result = await res.json();
-            console.log(result,"fdgfghfg")
+
             newStatuts[u.id_utilisateur] = {
               statut: u.statut || "inconnu",
               days: result.jours ?? "?"
@@ -48,22 +49,18 @@ const Utilisateurs = ({refresh}) => {
 
 
 
-// 2. Calculer la date correspondante
 
 
-// 3. Afficher la date en format lisible
 
-
-// 4. Calculer le temps écoulé par rapport à maintenant
             const now = Date.now();
             const elapsedMilliseconds = now - now;
 
-// 5. Convertir en jours, heures, minutes, secondes
+
             const seconds = Math.floor(result.elapsedTime / 1000);
             const minutes = Math.floor(seconds / 60);
             const hours = Math.floor(minutes / 60);
             const days = Math.floor(hours / 24);
-            console.log(seconds,minutes,hours,days,"zreqshtryjuty",result.elapsedTime )
+
 
             if (result.statut === "noconnexion") {
               newStatuts[u.id_utilisateur] = { statut: "inactif", days: "jamais" };
@@ -72,7 +69,7 @@ const Utilisateurs = ({refresh}) => {
               let lasttime;
 
               if (lasttime > 0) {
-                // Différence positive → dans le passé
+
                 if (days >= 1) {
                   lasttime =  `il y a${days} jour${days > 1 ? 's' : ''}`;
                 } else {
@@ -80,7 +77,7 @@ const Utilisateurs = ({refresh}) => {
                 }
               }
             } else if (result.statut === "actif") {
-              console.log(u,"wxcwxwdfwg",result)
+
               const diffAbs = Math.abs(result.jours);
 
               let lasttime;
@@ -139,7 +136,19 @@ const Utilisateurs = ({refresh}) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nom, prenom, email, role, statut: "actif", mot_de_passe })
     });
-    alert("Utilisateur mis à jour ✅");
+    const message =(
+        <strong> utilisateur mis à jour!</strong>
+    )
+
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 6000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
   };
 
   const supprimerUtilisateur = async (id) => {
@@ -150,6 +159,19 @@ const Utilisateurs = ({refresh}) => {
       const copy = { ...prev };
       delete copy[id];
       return copy;
+    });
+    const message =(
+        <strong> utilisateur supprimé !</strong>
+    )
+
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 6000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
     });
   };
 

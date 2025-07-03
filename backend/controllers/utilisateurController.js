@@ -249,7 +249,7 @@ exports.updateUtilisateur = async (req, res) => {
 
 exports.checkStatut = async (req, res) => {
     const { id } = req.params;  // attention, tu avais id_utilisateur mais dans ta route c'est :id
-console.log(id)
+
 /*    const [countRows] = await db.query(
         'SELECT * FROM connexions WHERE id_utilisateur = ?',
         [id]
@@ -259,7 +259,7 @@ console.log(id)
         'SELECT date_connexion FROM connexions WHERE id_utilisateur = ? ORDER BY date_connexion DESC LIMIT 1',
         [id]
     );
-console.log(connRows)
+
 
     if (!(connRows.length <=0)) {
 
@@ -272,16 +272,14 @@ console.log(connRows)
         const diffInDays = Math.floor(diffEnMs / (1000 * 60 * 60 * 24));
 
         let nouveauStatut = diffInDays > 10 ? "inactif" : "actif";
-        if (id === 7 ){
-            console.log(diffInDays > 10,"fszetrytrrf",diffInDays)
-        }
+
 
         // Mise à jour du statut utilisateur
         await db.query(
             'UPDATE utilisateurs SET statut = ? WHERE id_utilisateur = ?',
             [nouveauStatut, id]
         );
-console.log(diffInDays,diffEnMs,connRows[0].date_connexion,connRows)
+
         res.json({ statut: nouveauStatut, elapsedTime: diffEnMs });
     }else {
         // Pas de connexion
@@ -354,13 +352,13 @@ exports.getUtilisateurConnecte = async (req, res) => {
 exports.checkHistory = async (req, res) => {
     try{
         const { id } = req.params;  // attention, tu avais id_utilisateur mais dans ta route c'est :id
-        console.log(id,req.params.id)
+
         const [history] = await db.query(
             'SELECT *  FROM connexions WHERE id_utilisateur = ? ORDER BY date_connexion DESC ',
             [id]
         );
 
-        console.log([history][0])
+
 
         res.status(200).json({ history: history });
     }catch (err){
@@ -378,7 +376,7 @@ exports.getNombreUtilisateur = async (req, res) => {
             'SELECT COUNT(*) as nb FROM utilisateurs ',
 
         );
-        console.log(rows[0],"dfsrdtrdfgdffhgfghfgfhgfghhfhfgty")
+
 
 
 

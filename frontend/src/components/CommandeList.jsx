@@ -10,7 +10,7 @@ const Comdetails = (refresh ) => {
   const [contenus, setContenus] = useState([]);
   const [nombreProduitsParCommande, setNombreProduitsParCommande] = useState({});
   const [showModal, setShowModal] = useState(false);
-
+  const [ruptures, setRuptures] = useState([]);
   useEffect(() => {
     fetch("http://localhost:5000/api/commandes", {
       credentials: "include",
@@ -28,6 +28,40 @@ const Comdetails = (refresh ) => {
         })
         .catch(() => setCommandes([]));
   }, [refresh]);
+  if ("Notification" in window) {
+    Notification.requestPermission();
+  }
+
+  const cooldownMinutes = 10;
+  const cooldownKey = "lastShortageNotification";
+  const now = Date.now();
+
+  const lastNotif = localStorage.getItem(cooldownKey);
+  const lastNotifTime = lastNotif ? parseInt(lastNotif) : 0;
+  const elapsedMinutes = (now - lastNotifTime) / 60000;
+
+  fetch("http://localhost:5000/api/alert/shortage", { credentials: "include" })
+      .then(res => res.json())
+      .then(data => {
+        setRuptures(data);
+        console.log(data);
+
+        if (
+            data.length > 0 &&
+            Notification.permission === "granted" &&
+            elapsedMinutes > cooldownMinutes
+        ) {
+          new Notification("⚠️ Rupture de stock", {
+            body: `Il y a ${data.length} produit(s) en rupture.`,
+            icon: "/provider.jpeg",
+          });
+          // Enregistrer l'heure de la dernière notification
+          localStorage.setItem(cooldownKey, now.toString());
+        }
+      })
+      .catch(err => console.error("Erreur fetch ruptures", err));
+
+
 
   const fetchNombreProduits = async (id_commande) => {
     try {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {toast} from "react-toastify";
 
 const FournisseurForm = ({ onAdd }) => {
   const [showForm, setShowForm] = useState(false);
@@ -19,7 +20,7 @@ const FournisseurForm = ({ onAdd }) => {
       email,
       telephone,
     };
-    console.log("🔽 Fournisseur à envoyer :", fournisseur);
+
 
     try {
       const res = await fetch("http://localhost:5000/api/fournisseurs", {
@@ -28,17 +29,45 @@ const FournisseurForm = ({ onAdd }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fournisseur),
       });
-      // console.log("🔽 Réponse du serveur :", res);
-      // console.log("✅ Statut HTTP :", res.status);
+
 
       if (!res.ok) throw new Error("Erreur lors de la création");
 
-      alert("✅ Fournisseur ajouté avec succès");
+
+      const message =(
+          <strong> Fournisseur ajouté avec succès !</strong>
+      )
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+
       setNom("");
       setAdresse("");
       setEmail("");
       setTelephone("");
       setShowForm(false);
+
+/*
+
+      const message =(
+          <strong> Commande supprimée !</strong>
+      )
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+*/
 
       if (onAdd) onAdd();
     } catch (err) {

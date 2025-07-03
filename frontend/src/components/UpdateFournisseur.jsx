@@ -2,6 +2,7 @@
 
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import {toast} from "react-toastify";
 
 const FournisseurProduits = () => {
     const { id } = useParams();
@@ -13,19 +14,18 @@ const FournisseurProduits = () => {
 
 
     useEffect(() => {
-      console.log("🔍 ID reçu via useParams :", id);
+
 
         fetch(`http://localhost:5000/api/fournisseurs/${id}`, { credentials: "include" })
             .then(res => 
-              console.log("🔍 Réponse reçue pour le fournisseur :", res) ||
-              res.json())
+                res.json())
             
             .then(data => {
-              console.log("📦 Données JSON reçues :", data);
+
 
               if (Array.isArray(data) && data.length > 0) {
                 setFournisseur(data[0]);
-                console.log("Fournisseur trouvé :", data[0]);
+
               } else {
                 console.warn("Aucun fournisseur trouvé");
                 setFournisseur(null); // ou set une structure vide si tu préfères
@@ -81,7 +81,20 @@ const FournisseurProduits = () => {
         });
 
         if (!res.ok) alert("Erreur mise à jour fournisseur");
-        else alert("Fournisseur mis à jour ✅");
+        else {
+
+        const message =(
+            <strong> Fournisseur mis à jour !</strong>
+        )
+        toast.success(message, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+        })};;
     };
 
     const enregistrerProduit = async (produit) => {
@@ -91,7 +104,7 @@ const FournisseurProduits = () => {
             prix :produit.prix,
             id_fournisseur:produit.id_fournisseur
         };
-        console.log(body)
+
 
         const res = await fetch(`http://localhost:5000/api/produits-fournisseurs/${produit.id_pf}`, {
             method: "PUT",
@@ -99,10 +112,24 @@ const FournisseurProduits = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
-        console.log(res)
+
 
         if (!res.ok) alert(`Erreur mise à jour produit: ${produit.nom_produit}`);
-        else alert("Produit mis à jour ✅");
+        else {       const message =(
+            <strong> produit modifié !</strong>
+        )
+
+        toast.success(message, {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+        });
+
+    };
     };
 
     const supprimerProduit = async (idRelation) => {
@@ -115,8 +142,22 @@ const FournisseurProduits = () => {
         });
 
         if (res.ok) {
+            window.location.reload();
             setProduits(produits.filter(p => p.id_relation !== idRelation));
             setModifProduits(modifProduits.filter(p => p.id_relation !== idRelation));
+            const message =(
+                <strong> produit supprimé !</strong>
+            )
+
+            toast.success(message, {
+                position: "top-right",
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "light",
+            });
         } else {
             alert("Erreur suppression produit");
         }
@@ -265,6 +306,8 @@ const FournisseurProduits = () => {
 
                     if (res.ok) {
                         alert("Produit ajouté au fournisseur ✅");
+
+
                         window.location.reload(); // Recharge pour afficher le nouveau
                     } else {
                         alert("Erreur ajout produit");

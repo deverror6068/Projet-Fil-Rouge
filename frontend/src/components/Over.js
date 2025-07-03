@@ -15,7 +15,7 @@ const Off = () => {
                credentials:'include'
                 });
                 const orders = await response.json();
-                console.log("qseswfrddresg",orders)
+
 
                 // Regrouper les commandes par utilisateur
                 const userStatsMap = {};

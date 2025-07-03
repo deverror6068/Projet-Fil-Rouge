@@ -27,7 +27,7 @@ const Commande = () => {
   // ✅ Ajouter une commande
   const handleAdd = async (commande) => {
 
-    console.log("sdq<sefqqsd",commande)
+
      const  res  = await fetch("http://localhost:5000/api/commandes/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,11 +35,11 @@ const Commande = () => {
       body: commande,
     });
     let data = await res.json()
-  console.log( "sdygsdf",Object.entries(data) )
-    console.log(JSON.parse(commande).commande,'sqdsfertergttrty')
+
+
     if (res.ok){
         let resume = JSON.parse(commande)
-        console.log(resume.commande.id_fournisseur)
+
       const message = (
           <div>
             <strong>✅ Commande ajoutée !</strong>

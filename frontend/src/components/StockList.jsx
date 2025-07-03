@@ -16,7 +16,7 @@ const StockList = () => {
       .then((data) => {
         if (Array.isArray(data)) {
           setStocks(data);
-          console.log("📦 Stocks récupérés :", data);
+
         } else {
           console.warn("❌ Format de réponse inattendu :", data);
           setStocks([]);

@@ -47,6 +47,8 @@ const FournisseurTable = ({ refresh, setRefresh }) => {
       await fetch(`/api/fournisseurs/${id}`, { method: "DELETE" });
       setRefresh((prev) => !prev);
       alert("Fournisseur supprimé");
+
+
     } catch (err) {
       console.error("Erreur suppression :", err);
       alert(err);

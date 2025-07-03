@@ -21,7 +21,7 @@ const StockDashboard = () => {
           credentials: "include",
         });
         const data = await res.json();
-        console.log("✅ Données reçues du backend :", data);
+
 
         const formate = data.map(c => ({
           date: new Date(c.date_commande).toLocaleDateString("fr-FR", {

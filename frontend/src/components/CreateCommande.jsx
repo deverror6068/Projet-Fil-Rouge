@@ -55,7 +55,7 @@ const CreateCommande = ({ onAdd }) => {
                 if (Array.isArray(data)) {
 
 
-                    console.log("YGVFsdft Dosqdnut ds 2",data)
+
                     onAdd(data);
                 } else {
                     console.warn("❌ Données reçues non valides :", data);
@@ -66,7 +66,7 @@ const CreateCommande = ({ onAdd }) => {
                 console.error("Erreur chargement commandes", err);
 
             });
-        console.log("chargement er données e commande 2 e")
+
     }
 
     const handleSubmit = async (e) => {
@@ -98,7 +98,7 @@ const CreateCommande = ({ onAdd }) => {
                 // Appeler la fonction onAdd pour rafraîchir la liste dans le parent
                 if (onAdd) {
                     onAdd(commandeData);
-                    console.log(onAdd,"sdffzeesdr")
+
                 }
 
                 // Réinitialiser le formulaire

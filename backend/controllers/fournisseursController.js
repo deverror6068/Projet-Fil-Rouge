@@ -15,13 +15,13 @@ exports.getFournisseurs = async (req, res) => {
 exports.getFournisseursById = async (req, res,) => {
     try {
         const {id} = req.params
-        console.log(id)
+
         const [rows] = await db.query('SELECT * FROM fournisseurs WHERE id_fournisseur = ?',
         [id]
         );
         res.json(rows);
     } catch (err) {
-        console.log("err",err)
+
         res.status(500).json({ error: 'Erreur lors de la récupération des fournisseurs' });
     }
 };
@@ -29,7 +29,7 @@ exports.getFournisseursById = async (req, res,) => {
 // ➕ POST - Ajouter un fournisseur
 exports.ajouterFournisseur = async (req, res) => {
     const { nom, adresse, email, telephone } = req.body;
-    console.log("🔽 Fournisseur à ajouter :", req.body);
+
     try {
         await db.query(
             'INSERT INTO fournisseurs (nom, adresse, email, telephone) VALUES (?, ?, ?, ?)',

@@ -115,10 +115,10 @@ const UserProfile = () => {
           credentials: "include",
         });
         const data = await res.json();
-        console.log("👤 Utilisateur récupéré :", data);
+
         setUser(data);
       } catch (err) {
-        console.error("Erreur chargement utilisateur :", err);
+
       }
     };
 

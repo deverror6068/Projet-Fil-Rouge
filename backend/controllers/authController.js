@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
 
 
     } catch (err) {
-        console.log(err)
+
         res.status(500).json({ message: 'Erreur lors de la connexion' });
     }
 };

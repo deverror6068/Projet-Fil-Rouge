@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductEditForm from "./UpdateProduct";
 import { useAuth } from "../contexts/AuthContext";
+import {toast} from "react-toastify";
 
 const SalesData = ({ refresh, setRefresh }) => {
   const [produits, setProduits] = useState([]);
@@ -28,7 +29,21 @@ const SalesData = ({ refresh, setRefresh }) => {
     try {
       await fetch(`/api/produits/${id}`, { method: "DELETE" });
       setRefresh((prev) => !prev);
-      alert("Produit supprimé");
+      const message =(
+          <strong> produit supprimé !</strong>
+      )
+
+      toast.success(message, {
+        position: "top-right",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+
+
     } catch (err) {
       console.error("Erreur suppression :", err);
     }
