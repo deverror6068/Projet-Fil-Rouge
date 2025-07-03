@@ -32,7 +32,7 @@ const Fournipage = () => {
         <div className="home-content" style={{position: "fixed"}}>
           <h2>Gestion des Fournisseurs</h2>
           <div className="product-actions" style={{ display: "flex", gap: "4rem" }}>
-            <CreateFournisseur onAdd={handleRefresh} />
+            <CreateFournisseur onAdd={handleRefresh}    refresh={refresh}/>
 
 
             <div className="sales-boxes" style={{ width: "90%" }}> 

@@ -1,6 +1,6 @@
 // import logo from './logo.svg';
-import './styles.css';
-import './App.css';
+import './style/styles.css';
+import './style/App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
@@ -51,6 +51,7 @@ function App() {
             <Route path="/products" element={
                 <RouteProtegee>
                     <ProductPage />
+                    <ToastContainer />
                 </RouteProtegee>
             } />
             <Route path="/command" element={

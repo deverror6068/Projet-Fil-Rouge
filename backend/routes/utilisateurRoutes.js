@@ -39,8 +39,8 @@ router.post('/register', utilisateurController.RegisterUser);
 router.delete('/:id',requireLogin, utilisateurController.deleteUtilisateur);
 
 router.put('/:id',requireLogin, utilisateurController.updateUtilisateur);
-
 router.get( '/connexion/:id',requireLogin,utilisateurController.checkStatut)
+router.get( '/number',requireLogin,utilisateurController.getNombreUtilisateur)
 
 router.get( '/connexion-history/:id',requireLogin,utilisateurController.checkHistory)
 

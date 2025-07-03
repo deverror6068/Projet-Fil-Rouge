@@ -158,7 +158,9 @@ const SearchBox = () => {
                 </tr>
               </thead>
               <tbody>
-                {selectedFournisseurProduits.map((produit, idx) => (
+                { selectedFournisseurProduits.length >0 && selectedFournisseurProduits.map((produit, idx) => (
+
+
                   <tr key={idx}>
                     <td>{produit.nom_produit}</td>
                     <td>{produit.description}</td>
@@ -166,6 +168,7 @@ const SearchBox = () => {
                     <td>{produit.quantite}</td>
                   </tr>
                 ))}
+
               </tbody>
             </table>
             <div style={{ marginTop: "20px", textAlign: "right" }}>

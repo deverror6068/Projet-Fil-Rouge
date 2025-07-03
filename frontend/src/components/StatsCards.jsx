@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
+import axios from "axios"
+
+import { useAuth } from "../contexts/AuthContext";
+
+
 
 const StatsCards = () => {
   const [stats, setStats] = useState({
     commandes: 0,
     produits: 0,
     fournisseurs: 0,
+    utilisateurs:0,
   });
+
+  const { utilisateur } = useAuth();
+
+
+
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -14,7 +25,12 @@ const StatsCards = () => {
         const res = await axios.get("http://localhost:5000/api/dashboard/stats", {
           withCredentials: true,
         });
+        console.log(res,"ertry")
         setStats(res.data);
+
+
+
+
       } catch (err) {
         console.error("Erreur lors de la récupération des stats :", err);
       }
@@ -48,14 +64,19 @@ const StatsCards = () => {
       arrow: "bx bx-up-arrow-alt",
       link: "/fournisseurs",
     },
-    {
-      topic: "Statics",
-      number: "N/A", // Placeholder, replace with actual data if available
-      icon: "bx bx-group cart four",
-      trend: "Total",
-      arrow: "bx bx-up-arrow-alt",
-      link: "/analyse",
-    },
+
+    ...(utilisateur.role ==="responsable"
+        ? [
+          {
+            topic: "Utilisateurs",
+            number: stats.utilisateurs.nb,
+            icon: "bx bx-group cart four",
+            trend: "Total",
+            arrow: "bx bx-up-arrow-alt",
+            link: "/analyse",
+          },
+        ]
+        : []),
   ];
 
   return (

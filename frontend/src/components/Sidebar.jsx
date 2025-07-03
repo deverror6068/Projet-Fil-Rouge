@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import logo from './logo.png';
+import logo from '../assets/logo.png';
 import useLogout from "../services/authService";
 import useNavigateHook from "../services/redirectService";
 

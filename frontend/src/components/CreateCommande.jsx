@@ -8,8 +8,8 @@ const CreateCommande = ({ onAdd }) => {
     const [selectedFournisseurId, setSelectedFournisseurId] = useState("");
     const [message, setMessage] = useState("");
 
-    const fournisseurSelectionne = fournisseurs.find(f => f.id_fournisseur === parseInt(selectedFournisseurId));
-    const produitsFournisseur = produits.filter(p => p.id_fournisseur === parseInt(selectedFournisseurId));
+    const fournisseurSelectionne =fournisseurs.length>0 &&  fournisseurs.find(f => f.id_fournisseur === parseInt(selectedFournisseurId));
+    const produitsFournisseur = produits.length>0 && produits.filter(p => p.id_fournisseur === parseInt(selectedFournisseurId));
 
     useEffect(() => {
         fetch("/api/fournisseurs")
@@ -115,7 +115,7 @@ const CreateCommande = ({ onAdd }) => {
 
     const isAjouterDisabled = () => {
         const produitsAjoutes = lignes.map(l => l.id_produit);
-        const produitsRestants = produitsFournisseur.filter(p => !produitsAjoutes.includes(p.id_produit));
+        const produitsRestants = produitsFournisseur.length>0 && produitsFournisseur.filter(p => !produitsAjoutes.includes(p.id_produit));
         return produitsRestants.length === 0;
     };
 
@@ -164,7 +164,7 @@ const CreateCommande = ({ onAdd }) => {
                   }}
                 >
                   <option value="">-- Choisir un fournisseur --</option>
-                  {fournisseurs.map(f => (
+                  { fournisseurs.length>0 && fournisseurs.map(f => (
                     <option key={f.id_fournisseur} value={f.id_fournisseur}>
                       {f.nom}
                     </option>
@@ -196,7 +196,7 @@ const CreateCommande = ({ onAdd }) => {
                     style={{ padding: "6px", borderRadius: "6px", border: "1px solid #ccc", flex: 2 }}
                   >
                     <option value="">-- Produit --</option>
-                    {produitsFournisseur
+                    { produitsFournisseur.length>0 && produitsFournisseur
                       .filter(p => !lignes.some((l, i) => i !== index && l.id_produit === p.id_produit))
                       .map(p => (
                         <option key={p.id_produit} value={p.id_produit}>

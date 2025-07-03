@@ -14,7 +14,7 @@ const ProductPage = () => {
 
   // Charger les produits depuis l'API
   useEffect(() => {
-    fetch("/api/produits")
+    fetch("/api/produits/list")
       .then((res) => res.json())
       .then(setProducts)
       .catch((err) => console.error("Erreur chargement produits", err));
@@ -78,16 +78,7 @@ const ProductPage = () => {
                 editingProduct={editingProduct}
               />
 
-              {/* <CreateProFornisseur
-                onAdd={handleAdd} 
-                onEdit={handleEdit}
-                editingProduct={editingProduct}
-              />
-              <AssocierProductFor
-                onAdd={handleAdd}
-                onEdit={handleEdit}
-                editingProduct={editingProduct}
-              /> */}
+
             </div>
 
             <div className="sales-boxes" style={{ marginTop: "3rem", flex: 1 }}> 

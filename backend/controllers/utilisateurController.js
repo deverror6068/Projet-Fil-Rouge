@@ -367,3 +367,24 @@ exports.checkHistory = async (req, res) => {
         res.status(500).json({ message: "Erreur serveur.", details : err });
     }
 };
+
+
+exports.getNombreUtilisateur = async (req, res) => {
+
+
+
+    try {
+        const [rows] = await db.query(
+            'SELECT COUNT(*) as nb FROM utilisateurs ',
+
+        );
+        console.log(rows[0],"dfsrdtrdfgdffhgfghfgfhgfghhfhfgty")
+
+
+
+        return(  rows[0] );
+    } catch (err) {
+        console.error("Erreur getNombree :", err);
+
+    }
+};

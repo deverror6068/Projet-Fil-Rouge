@@ -226,7 +226,7 @@ exports.getNombreProduitsParCommande = async (req, res) => {
 //recuperer les date de commande
 exports.getCommandeDates = async (req, res) => {
     try {
-        const [commandes] = await db.query(`
+        const [commandes] = await db.query(` 
             SELECT DATE(date_commande) AS date_commande, COUNT(*) AS nombre_commandes
             FROM commandes
             GROUP BY DATE(date_commande)

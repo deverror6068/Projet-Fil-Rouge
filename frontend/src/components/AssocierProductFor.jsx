@@ -63,7 +63,8 @@ const AssocierFournisseurPage = () => {
           credentials: "include"
         });
         setAssociations(await updated.json());
-      } else {
+      }
+      else {
         const err = await res.json();
         setMessage("❌ Erreur : " + (err.message || err));
       }

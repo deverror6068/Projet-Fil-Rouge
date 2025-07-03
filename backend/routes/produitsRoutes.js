@@ -37,6 +37,8 @@ const db = require("../models/db");
 
 // Routes
 router.get('/', requireLogin, produitsController.getProduits);
+router.get('/list', requireLogin, produitsController.getListProduits);
+
 router.post('/',requireLogin, produitsController.ajouterProduit);
 router.delete('/:id',requireLogin, produitsController.supprimerProduit);
 router.put('/:id',requireLogin, produitsController.mettreAJourProduit); // Pour être complet

@@ -107,7 +107,7 @@ const FournisseurTable = () => {
               </tr>
             </thead>
             <tbody>
-              {fournisseurs.map((fournisseur) => (
+              {fournisseurs.length>0 && fournisseurs.map((fournisseur) => (
                 <tr key={fournisseur.id_fournisseur}>
                   <td
                     style={{ padding: "10px", borderBottom: "1px solid #ddd", cursor: "pointer", color: "blue" }}

@@ -9,7 +9,7 @@ const SalesData = ({ refresh, setRefresh }) => {
   const { utilisateur } = useAuth();
 
   useEffect(() => {
-    fetch("/api/produits")
+    fetch("/api/produits/list")
       .then((res) => res.json())
       .then((data) => {
         const produitsArray = Array.isArray(data) ? data : data.produits;

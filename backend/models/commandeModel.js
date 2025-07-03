@@ -1,7 +1,7 @@
-// backend/models/commandeModel.js
+
 const db = require('./db');
 
-// ✅ Création d'une commande
+// Création d'une commande
 exports.createCommande = async (id_fournisseur, id_magasin, conn) => {
   const [result] = await conn.query(
     `INSERT INTO commandes (id_fournisseur, id_magasin,  date_commande, status) 
@@ -11,7 +11,7 @@ exports.createCommande = async (id_fournisseur, id_magasin, conn) => {
   return result.insertId;
 };
 
-// ✅ Ajout de produits à une commande
+//  Ajout de produits à une commande
 exports.addProduitsToCommande = async (id_commande, produits, conn) => {
   for (const produit of produits) {
     if (!produit.id_produit || !produit.quantite) continue;
@@ -35,16 +35,6 @@ exports.getCommandesAdmin = async () => {
   return commandes;
 };
 
-exports.getCommandesByMagasin = async (idMagasin) => {
-  const [commandes] = await db.query(`
-    SELECT c.id_commande, c.date_commande, c.status, f.nom AS fournisseur
-    FROM commandes c
-    JOIN fournisseurs f ON c.id_fournisseur = f.id_fournisseur
-    WHERE c.id_magasin = ?
-    ORDER BY c.date_commande DESC
-  `, [idMagasin]);
-  return commandes;
-};
 
 exports.getProduitsByCommande = async (idCommande) => {
   const [produits] = await db.query(`
