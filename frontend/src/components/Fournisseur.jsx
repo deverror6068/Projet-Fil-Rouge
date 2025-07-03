@@ -49,7 +49,7 @@ const FournisseurTable = ({ refresh, setRefresh }) => {
       alert("Fournisseur supprimé");
     } catch (err) {
       console.error("Erreur suppression :", err);
-      alert("Erreur lors de la suppression");
+      alert(err);
     }
   };
 
@@ -204,7 +204,7 @@ const FournisseurTable = ({ refresh, setRefresh }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {produitsFournisseur.map((produit, idx) => (
+                  {produitsFournisseur.length>0 && produitsFournisseur.map((produit, idx) => (
                     <tr key={idx}>
                       <td>{produit.nom_produit}</td>
                       <td>{produit.description}</td>

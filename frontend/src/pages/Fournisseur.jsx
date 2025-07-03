@@ -39,7 +39,7 @@ const Fournipage = () => {
             {/* <Fournisseur refresh={refresh} setRefresh={setRefresh}/> */}
               <Fournisseur
                 fournisseurs={fournisseurs}
-                refresh={refresh}
+                refresh={refresh} setRefresh={setRefresh}
                 onRefresh={handleRefresh}
               />
             </div>
