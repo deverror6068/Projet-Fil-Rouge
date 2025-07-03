@@ -29,7 +29,7 @@ const AjouterProduitFournisseur = ({onAdd}) => {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/list", { credentials: "include" })
+    fetch("http://localhost:5000/api/produits/list", { credentials: "include" })
       .then(res => res.json())
       .then(data => 
         console.log("Produits chargés  4G :", data) ||  // Log pour vérifier les données

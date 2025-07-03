@@ -74,12 +74,12 @@ const ProductForm = ({ onAdd }) => {
 
           <div className="form-proFornisseur">
             <label>Quantité du produit</label>
-            <input type="number" value={quantite} onChange={(e) => setQuantite(e.target.value)} required />
+            <input type="number" value={quantite} min={1} step={1} onChange={(e) => setQuantite(e.target.value)} required />
           </div>
 
           <div className="form-proFornisseur">
             <label>Prix unitaire</label>
-            <input type="number" value={prix} onChange={(e) => setPrix(e.target.value)} required />
+            <input type="number" value={prix}  min={0.1}  step={0.1} onChange={(e) => setPrix(e.target.value)} required />
           </div>
 
           <div className="form-proFornisseur">

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../style/LoginPage.css"; // on réutilise les mêmes styles
+import "../style/LoginPage.css";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -102,18 +102,7 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="form-group mb-4">
-            <select
-              className="form-control"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-            >
-              <option value="utilisateur">Utilisateur</option>
-              <option value="responsable">Responsable</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
+
 
           <button type="submit" className="btn w-100 modern-btn">
             S'inscrire
