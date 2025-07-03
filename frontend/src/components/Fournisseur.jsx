@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UpdateFournisseur from "./UpdateFournisseur";
 
-const FournisseurTable = () => {
+const FournisseurTable = ({ refresh, setRefresh }) => {
   const [fournisseurs, setFournisseurs] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  // const [refresh, setRefresh] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedFournisseur, setSelectedFournisseur] = useState(null);
   const [showModal, setShowModal] = useState(false);

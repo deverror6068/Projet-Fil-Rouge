@@ -40,7 +40,7 @@ const FournisseurForm = ({ onAdd }) => {
       setTelephone("");
       setShowForm(false);
 
-      if (onAdd) ; // si tu veux rafraîchir la liste des fournisseurs
+      if (onAdd) onAdd();
     } catch (err) {
       console.error("❌ Erreur:", err);
       alert("Erreur lors de l'enregistrement");
