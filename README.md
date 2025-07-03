@@ -1,49 +1,51 @@
 
-# 📦 D-Stock – Application de Gestion de Stock
+#  D-Stock – Application de Gestion de Stock
 
-**D-Stock** est une plateforme web moderne de gestion des stocks pour une chaîne de magasins. Elle permet la gestion complète des produits, fournisseurs, commandes et utilisateurs avec des rôles différenciés (`admin`, `responsable`, `utilisateur`). Le tout est enrichi par des dashboards clairs et des statistiques visuelles pour un suivi optimal.
+**D-Stock** est une application web  de gestion des stocks pour une chaîne de magasins. Elle permet la gestion  des produits, fournisseurs, commandes et utilisateurs avec des rôles différenciés ( `responsable`, `utilisateur`). Le tout est épaulé par des dashboards  et des statistiques visuelles pour un suivi optimal.
 
 ## ✨ Fonctionnalités principales
 
-- 🔐 **Gestion des utilisateurs**
-  - Connexion sécurisée avec rôles (`admin`, `responsable`, `utilisateur`)
+-  **Gestion des utilisateurs**
+  - Connexion sécurisée avec rôles ( `responsable`, `utilisateur`)
   - Affichage personnalisé selon le rôle
 
-- 📦 **Gestion des produits**
+-  **Gestion des produits**
   - CRUD complet
   - Visualisation des produits disponibles
   - Alerte stock faible (moins de 5 unités restantes)
 
-- 🧾 **Gestion des fournisseurs**
+-  **Gestion des fournisseurs**
   - Ajout, modification et suppression
   - Association produit ↔ fournisseur
 
-- 📋 **Gestion des commandes**
+-  **Gestion des commandes**
   - Création de commande (choix du fournisseur)
   - Suivi du statut (`enregistrée`, `livrée`, etc.)
 
-- 📊 **Dashboard & Statistiques**
+-  **Dashboard & Statistiques**
   - Nombre total de commandes, produits, fournisseurs
   - Graphiques (stats visuelles)
   - Liste des produits en stock critique
   - Produits les plus populaires (à venir)
 
-## 🖥️ Interface utilisateur
+##  Interface utilisateur
 
 L’interface est construite avec React, pensée pour une expérience fluide et responsive :
 - Sidebar latéral pour la navigation
 - Dashboard principal avec KPIs et tableaux
 - Composants dynamiques (modales, scrolls, formulaires, etc.)
 
-## 🛠️ Stack technique
+##  Stack technique
 
 - **Frontend** : React, HTML, CSS
-- **Backend** : Node.js, Express.js
+- **Backend** : Node.js, Express.js,Axios pour certaine requetes
 - **Base de données** : SQL
 - **Auth** : Sessions avec cookie sécurisé
+- **PHPmyAdmin** et **WampServer**  : pour  l'administration de la base de donnée 
 
 
-## 🚀 Lancement du projet
+
+##  Lancement du projet
 
 ### 1. Backend
 ```bash
@@ -60,25 +62,26 @@ npm npm start
 ```
 
 
-## 📦 Fonctionnalités futures
+##  Fonctionnalités futures
 
 - Authentification JWT
 - Gestion des retours produit
 - Système de notifications (rupture, commande livrée)
 - Ajout des tests unitaires
+- Ajout du role `admin`
 
-## 👨‍💻 Auteur
+##  Auteurs
 
-Projet développé par **Pélagie-AINTANGAR&Alexandre-PHAM** – Fullstack Developer (React / Node)
+Projet développé par **Pélagie-AINTANGAR et  Alexandre-PHAM**  dans le cadre du projet `Fil-Rouge`
 
 
-🔍 Documentation des Routes – Partie 1 
-# Route API
+
+
 # Documentation Technique du Projet
 
 ## Présentation Générale
 
-Ce projet est une application web de gestion (stock, commandes, utilisateurs, etc.) composée d’un backend Node.js/Express et d’un frontend React.
+Ce projet est une application web de gestion (stock, commandes, utilisateurs, etc.) composée d’un backend Node.js/Express et d’un frontend React avec un support d'Axios dans certaines requetes.
 
 ---
 
