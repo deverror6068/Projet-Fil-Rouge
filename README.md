@@ -1,28 +1,29 @@
 
-#  D-Stock – Application de Gestion de Stock
+#  D-Stock  Application de Gestion de Stock
 
 **D-Stock** est une application web  de gestion des stocks pour une chaîne de magasins. Elle permet la gestion  des produits, fournisseurs, commandes et utilisateurs avec des rôles différenciés ( `responsable`, `utilisateur`). Le tout est épaulé par des dashboards  et des statistiques visuelles pour un suivi optimal.
 
-## ✨ Fonctionnalités principales
+##  Fonctionnalités principales
 
--  **Gestion des utilisateurs**
+- **Gestion des utilisateurs** 
   - Connexion sécurisée avec rôles ( `responsable`, `utilisateur`)
   - Affichage personnalisé selon le rôle
+  - Surveillance des connexions
 
--  **Gestion des produits**
+- **Gestion des produits**
   - CRUD complet
   - Visualisation des produits disponibles
   - Alerte stock faible (moins de 5 unités restantes)
 
--  **Gestion des fournisseurs**
+- **Gestion des fournisseurs**
   - Ajout, modification et suppression
   - Association produit ↔ fournisseur
 
--  **Gestion des commandes**
+- **Gestion des commandes**
   - Création de commande (choix du fournisseur)
   - Suivi du statut (`enregistrée`, `livrée`, etc.)
 
--  **Dashboard & Statistiques**
+- **Dashboard & Statistiques**
   - Nombre total de commandes, produits, fournisseurs
   - Graphiques (stats visuelles)
   - Liste des produits en stock critique
@@ -30,7 +31,7 @@
 
 ##  Interface utilisateur
 
-L’interface est construite avec React, pensée pour une expérience fluide et responsive :
+L’interface est construite avec React :
 - Sidebar latéral pour la navigation
 - Dashboard principal avec KPIs et tableaux
 - Composants dynamiques (modales, scrolls, formulaires, etc.)
@@ -47,14 +48,30 @@ L’interface est construite avec React, pensée pour une expérience fluide et 
 
 ##  Lancement du projet
 
-### 1. Backend
+### 1. Base de donnée
+- Installez Wampserver 
+- Lancez Wampserver
+- A partir de la page localhost  accédez  à php myadmin 
+- cliquez sur `Nouvelle base de données ` et donnez le nom que vous voulez pour votre base de donnée
+- Allez dans `importer` et sélectionnez en pièce jointe la base de donnée fournie 
+- Créez dans le fichier `backend` un fichier `.env` qui contiendra les information suivantes : 
+  
+```bash 
+  DB_HOST=localhost
+  DB_USER=root
+  DB_PASSWORD=votre mot de passe phpmyadmin
+  DB_NAME=le nom que vous avez choisi pour votre base de donnée
+  PORT=5000
+  JWT_SECRET=un secret que vous pouver générer en ligne
+  ```
+### 2. Backend
 ```bash
 cd backend
 npm install
 npm start
 ```
 
-### 2. Frontend
+### 3. Frontend
 ```bash
 cd frontend
 npm install
